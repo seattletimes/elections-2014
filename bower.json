@@ -1,0 +1,24 @@
+{
+  "name": "elections-2014",
+  "version": "0.0.1",
+  "homepage": "https://github.com/seattletimes/elections-2014",
+  "authors": [
+    "The Seattle Times"
+  ],
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/js/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "seattletimes-pym": "~1.0.0",
+    "rsvp": "~3.0.13"
+  }
+}
