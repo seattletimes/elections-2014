@@ -58,12 +58,16 @@ define([
     state.svg.document.then(function(doc) {
       doc.addEventListener("mousemove", onHover.bind(self));
     });
+    this.addEventListener("mouseleave", function() {
+      self.querySelector(".popup").removeAttribute("show");
+    });
   };
   mapProto.detachedCallback = function() {
     var state = this.getState();
     state.svg.document.then(function(doc) {
       doc.removeEventListener("mousemove");
     });
+    this.removeEventListener("mouseleave");
   };
   mapProto.svg = null;
   mapProto.eachCounty = function(f) {
