@@ -21,6 +21,7 @@ module.exports = function(grunt) {
       generateSourceMaps: true,
       preserveLicenseComments: false,
       optimize: "none",
+      stubModules: ["text", "less"],
       //common paths for bower packages
       //luckily, require won't complain unless we use them
       paths: {

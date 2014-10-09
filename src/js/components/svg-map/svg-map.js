@@ -3,25 +3,30 @@
 */
 /* global ich */
 define([
-  "text!components/svg-map/_svg-map.html",
+  "text!./_svg-map.html",
   "savage",
   "icanhaz",
   "registerElement",
-  "less!components/svg-map/svg-map.less"
+  "less!./svg-map.less"
 ], function(template, savage) {
   ich.addTemplate("map", template);
 
   var onHover = function(e) {
-    if (e.target.tagName != "path" || e.target.getAttribute("class").indexOf("county") == -1) return;
+    var popup = this.querySelector(".popup");
+    if (e.target.tagName != "path" || e.target.getAttribute("class").indexOf("county") == -1) {
+      popup.removeAttribute("show");
+      return;
+    }
     var state = this.getState();
     //if no listener, don't do anything
     if (!state.getCountyData) return;
     var key = e.target.getAttribute("data-location");
-    var popup = this.querySelector(".popup");
+    popup.setAttribute("show", "");
     if (state.lastHover != key) {
       //we're on a new county, so inject new template output
       var data = state.getCountyData(key);
       popup.innerHTML = state.transclude(data);
+      savage.raise(e.target);
     }
     state.lastHover = key;
     var bounds = this.getBoundingClientRect();
