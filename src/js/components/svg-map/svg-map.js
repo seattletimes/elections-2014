@@ -20,6 +20,10 @@ define([
     var state = this.getState();
     //if no listener, don't do anything
     if (!state.getCountyData) return;
+    state.svg.queryAll(".active").then(function(active) {
+      active.forEach(function(el) { savage.removeClass(el, "active") });
+      savage.addClass(e.target, "active");
+    });
     var key = e.target.getAttribute("data-location");
     popup.setAttribute("show", "");
     if (state.lastHover != key) {

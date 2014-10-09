@@ -34,6 +34,24 @@ define([
     element.parentNode.appendChild(element);
   };
 
+  Savage.addClass = function(shape, add) {
+    shape.setAttribute("class", shape.getAttribute("class") + " " + add);
+  };
+
+  Savage.removeClass = function(shape, remove) {
+    var re = new RegExp("(^|\\s)" + remove + "(\\s|$)", "g");
+    shape.setAttribute("class", shape.getAttribute("class").replace(re, ""));
+  };
+
+  Savage.toggleClass = function(shape, toggle) {
+    var current = shape.getAttribute("class");
+    if (current.indexOf(toggle) == -1) {
+      Savage.addClass(shape, toggle);
+    } else {
+      Savage.removeclass(shape, toggle);
+    }
+  };
+
   return Savage;
 
 });
