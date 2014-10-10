@@ -7,8 +7,8 @@ define(function() {
     return {};
   }
 
-  //goofy, piggyback on grunt-contrib-less
-  var less = require.nodeRequire("grunt-contrib-less/node_modules/less");
+  //for efficiency, piggyback on grunt-contrib-less
+  var less = require.nodeRequire("less");
   var fs = require.nodeRequire("fs");
   var path = require.nodeRequire("path");
 
