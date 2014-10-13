@@ -55,9 +55,18 @@ module.exports = function(grunt) {
               delete row.updated;
               delete row.content;
               if (typeof row.id == "object") delete row.id;
-              //eliminate empty cells, which get a weird placeholder object
+              
               for (var key in row) {
                 var prop = row[key];
+                //casting and auto-detection: boolean
+                if (prop === "TRUE" || prop === "FALSE") {
+                  row[key] = prop == "TRUE";
+                }
+                //casting: numbers
+                if (typeof prop == "string" && prop.match(/^[\d.,]+$/)) {
+                  row[key] = Number(prop.replace(",", ""));
+                }
+                //eliminate empty cells, which get a weird placeholder object  
                 if (typeof prop == "object" && "$t" in prop && prop.$t === "") {
                   row[key] = "";
                 }

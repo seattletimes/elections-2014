@@ -4,3 +4,4 @@ temp
 auth.json
 .DS_Store
 src/js/lib/*
+json/Election2014*
