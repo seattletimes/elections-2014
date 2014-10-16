@@ -89,7 +89,7 @@ module.exports = function(grunt) {
           Body: upload.buffer,
           ACL: "public-read",
           ContentType: mime.lookup(upload.path),
-          CacheControl: "public,max-age=3000"
+          CacheControl: "private" //"public,max-age=3000"
         };
         //if this matches GZip support, compress them before uploading to S3
         var extension = upload.path.split(".").pop();
@@ -117,8 +117,8 @@ module.exports = function(grunt) {
       }, function(err) {
         if (err) return console.log(err);
         console.log("All files uploaded successfully");
-      })
+      });
     });
   });
 
-}
+};
