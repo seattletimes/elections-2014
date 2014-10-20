@@ -13,11 +13,17 @@ module.exports = function(grunt) {
   var secState = require("./lib/secState");
 
   grunt.registerTask("scrape", "Pull data from election result endpoints", function() {
+    console.log(arguments);
+
+    grunt.task.requires("state");
+    grunt.task.requires("json");
 
     var c = this.async();
 
     async.parallel([secState.statewide, secState.counties], function(err, results) {
-      console.log(err, results);
+      var statewide = results[0];
+      console.log(statewide);
+      grunt.file.write("temp/statewide.json", JSON.stringify(statewide, null, 2));
       c();
     });
 
