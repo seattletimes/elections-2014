@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <%= t.include("partials/_adHead.html") %>
   </head>
-  <body>
+  <body class="pending">
 
     <nav class="tab-container">
       <% election.categories.forEach(function(cat) { %>
@@ -21,16 +21,19 @@
           <h2><%= race.name %></h2>
           <ul class="results">
           <% for (var name in race.results) { var result = race.results[name] %>
-            <li> <%= result.candidate %> - <%= result.votes %> (<%= result.percent %>%)
+            <li> 
+              <div class="bar <%= result.party %>" style="width: <%= result.percent %>%"></div>
+              <%= result.candidate %> - <%= result.votes.toLocaleString() %> (<%= result.percent %>%)
+          <% } %>
+          <% if (race.map) { %>
+          <svg-map src="assets/counties.svg" class="demo">
+{{name}}
+          </svg-map>
           <% } %>
           </ul>
         <% }); %>
         </section>
       <% }); %>
-
-      <svg-map src="assets/counties.svg" class="demo">
-{{name}}
-      </svg-map>
     </main>
 
     <script src="app.js"></script>

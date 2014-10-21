@@ -24,4 +24,6 @@ require([
 
   $("a.tab:first").click();
 
+  document.body.className = "";
+
 });

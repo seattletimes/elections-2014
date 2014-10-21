@@ -7,10 +7,13 @@ Relies on adapters in tasks/lib for specific sites.
 
 var async = require("async");
 
+var debug = true;
+
 module.exports = function(grunt) {
 
   //call various adapters to get resources
   var secState = require("./lib/secState");
+  var alias = require("./lib/aliases");
 
   grunt.registerTask("scrape", "Pull data from election result endpoints", function() {
 
@@ -38,15 +41,42 @@ module.exports = function(grunt) {
           featured.push(row);
         }
       });
+
+      statewide.forEach(function(result) {
+        var race = races[result.race];
+        race.results[result.candidate] = result;
+        //merge in the candidate info
+        var realName = alias.antialias(result.candidate);
+        var candidate = alias.getCandidateInfo(realName);
+        result.party = candidate.party;
+        result.incumbent = candidate.incumbent;
+      });
+
+      //add fake data
+      if (debug) {
+        for (var id in races) {
+          var race = races[id];
+          var total = 0;
+          var candidates = Object.keys(race.results);
+          candidates.forEach(function(name) {
+            var result = race.results[name];
+            var votes = Math.round(Math.random() * 1000);
+            result.votes = votes;
+            total += votes;
+          });
+          //now find percentages
+          candidates.forEach(function(name) {
+            var result = race.results[name];
+            result.percent = (result.votes / total * 100).toFixed(1);
+          });
+        }
+      }
+
       var categories = ["Featured"].concat(Object.keys(categorized).sort());
       categorized.Featured = featured;
       races.categorized = categorized;
       races.categories = categories;
 
-      statewide.forEach(function(result) {
-        var race = races[result.race];
-        race.results[result.candidate] = result;
-      });
       grunt.data.election = races;
       c();
     });

@@ -27,3 +27,27 @@ svg-map {
     }
   }
 }
+
+.results {
+  margin: 0;
+  padding: 0;
+  list-style-typ: none;
+
+  .bar {
+    height: 10px;
+    background: gray;
+    transition: width 1s ease-in-out .5s;
+
+    .pending & {
+      width: 0px !important;
+    }
+
+    &.R {
+      background: red;
+    }
+
+    &.D {
+      background: blue;
+    }
+  }
+}
