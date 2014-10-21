@@ -8,3 +8,22 @@
 svg-map {
   width: 400px;
 }
+
+.tab-container {
+  .tab {
+    display: inline-block;
+    background: #DDD;
+    color: #999;
+    text-decoration: none;
+    padding: 4px 8px;
+
+    &.active {
+      background: #EEE;
+      color: #333;
+    }
+
+    & + .tab {
+      margin-left: 3px;
+    }
+  }
+}

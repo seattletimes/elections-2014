@@ -9,7 +9,25 @@
   </head>
   <body>
 
+    <nav class="tab-container">
+      <% election.categories.forEach(function(cat) { %>
+      <a class="tab" href="#<%= cat.replace(/\s/g, "") %>"><%= cat %></a>
+      <% }) %>
+    </nav>
     <main>
+      <% election.categories.forEach(function(cat) { var races = election.categorized[cat]; %>
+        <section class="category" id="<%= cat.replace(/\s/g, "") %>">
+        <% races.forEach(function(race) { %>
+          <h2><%= race.name %></h2>
+          <ul class="results">
+          <% for (var name in race.results) { var result = race.results[name] %>
+            <li> <%= result.candidate %> - <%= result.votes %> (<%= result.percent %>%)
+          <% } %>
+          </ul>
+        <% }); %>
+        </section>
+      <% }); %>
+
       <svg-map src="assets/counties.svg" class="demo">
 {{name}}
       </svg-map>

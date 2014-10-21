@@ -8,10 +8,12 @@ var configs = {
     location: "state"
   },
   counties: {
+    cache: "counties.json",
     url: "http://results.vote.wa.gov/results/current/export/20141104_AllCounties.csv",
     location: function(d) { return d.County }
   },
   precincts: {
+    cache: "precincts.json",
     url: "http://results.vote.wa.gov/results/current/export/20141104_AllStatePrecincts.csv",
     location: function(d) { return d.PrecinctCode },
     filter: function(d) { return d.PrecinctCode != -1 }
@@ -65,7 +67,7 @@ var getResults = function(config, c) {
   var cachePath = "./temp/" + config.cache;
   if (fs.existsSync(cachePath)) {
     if (fs.statSync(cachePath).mtime > (new Date(Date.now() - 5 * 60 * 1000))) {
-      return require(cachePath);
+      return c(null, JSON.parse(fs.readFileSync(cachePath)));
     }
   }
   var parser = csv.parse({
@@ -87,6 +89,7 @@ var getResults = function(config, c) {
     });
   });
   parser.on("finish", function() {
+    fs.writeFileSync(cachePath, JSON.stringify(rows, null, 2));
     c(null, rows);
   });
   request(config.url).pipe(parser);

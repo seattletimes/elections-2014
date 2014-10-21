@@ -13,7 +13,6 @@ module.exports = function(grunt) {
   var secState = require("./lib/secState");
 
   grunt.registerTask("scrape", "Pull data from election result endpoints", function() {
-    console.log(arguments);
 
     grunt.task.requires("state");
     grunt.task.requires("json");
@@ -22,8 +21,33 @@ module.exports = function(grunt) {
 
     async.parallel([secState.statewide, secState.counties], function(err, results) {
       var statewide = results[0];
-      console.log(statewide);
-      grunt.file.write("temp/statewide.json", JSON.stringify(statewide, null, 2));
+      //attach results to races
+      var raceConfig = grunt.file.readJSON("json/Election2014_Races.json");
+      var races = {};
+      var categorized = {};
+      var featured = [];
+      raceConfig.forEach(function(row) {
+        races[row.code] = row;
+        row.results = {};
+        var cat = row.category || "none";
+        if (!categorized[cat]) {
+          categorized[cat] = [];
+        }
+        categorized[cat].push(row);
+        if (row.featured) {
+          featured.push(row);
+        }
+      });
+      var categories = ["Featured"].concat(Object.keys(categorized).sort());
+      categorized.Featured = featured;
+      races.categorized = categorized;
+      races.categories = categories;
+
+      statewide.forEach(function(result) {
+        var race = races[result.race];
+        race.results[result.candidate] = result;
+      });
+      grunt.data.election = races;
       c();
     });
 
