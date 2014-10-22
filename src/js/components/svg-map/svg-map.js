@@ -34,8 +34,8 @@ define([
     }
     state.lastHover = key;
     var bounds = this.getBoundingClientRect();
-    popup.style.top = e.clientY - bounds.top + 20 + "px";
-    popup.style.left = e.clientX - bounds.left + 20 + "px";
+    popup.style.top = e.clientY + 20 + "px";
+    popup.style.left = e.clientX + 20 + "px";
   };
 
   var states = {};
@@ -46,11 +46,12 @@ define([
   mapProto.createdCallback = function() {
     var src = this.getAttribute("src");
     var id = idCounter++;
+    var templateName = "temp-" + id;
     this.setAttribute("data-instance", id);
     var state = this.getState();
-    ich.addTemplate("temp", this.innerHTML);
-    state.transclude = ich.temp;
-    delete ich.temp;
+    ich.addTemplate(templateName, this.innerHTML);
+    state.transclude = ich[templateName];
+    delete ich[templateName];
     this.innerHTML = ich.map({
       src: src
     });
@@ -77,7 +78,7 @@ define([
   mapProto.eachCounty = function(f) {
     var state = this.getState();
     state.svg.queryAll(".county").then(function(selected) {
-      selected.forEach(function(element) {
+      selected.forEach(function(element, i) {
         var location = element.getAttribute("data-location");
         f(element, location);
       });

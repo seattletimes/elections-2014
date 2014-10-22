@@ -24,6 +24,7 @@ module.exports = function(grunt) {
 
     async.parallel([secState.statewide, secState.counties], function(err, results) {
       var statewide = results[0];
+      var counties = results[1];
       //attach results to races
       var raceConfig = grunt.file.readJSON("json/Election2014_Races.json");
       var races = {};
@@ -52,6 +53,36 @@ module.exports = function(grunt) {
         result.incumbent = candidate.incumbent;
       });
 
+      //add county data to mappable races
+      var mapped = {};
+      Object.keys(races).forEach(function(id) {
+        var race = races[id];
+        if (race.map) {
+          var countyMap = {};
+          counties.forEach(function(result) {
+            if (result.race == id) {
+              var candidateInfo = alias.getCandidateInfo(result.candidate);
+              result.party = candidateInfo.party;
+              if (debug) {
+                result.votes = Math.round(Math.random() * 1000);
+              }
+              if (!countyMap[result.location]) {
+                countyMap[result.location] = {
+                  winner: result,
+                  results: []
+                };
+              }
+              var county = countyMap[result.location];
+              county.results.push(result);
+              if (county.winner.votes < result.votes) {
+                county.winner = result;
+              }
+            }
+          });
+          race.map = mapped[id] = countyMap;
+        }
+      });
+
       //add fake data
       if (debug) {
         for (var id in races) {
@@ -76,6 +107,7 @@ module.exports = function(grunt) {
       categorized.Featured = featured;
       races.categorized = categorized;
       races.categories = categories;
+      races.mapped = mapped;
 
       grunt.data.election = races;
       c();

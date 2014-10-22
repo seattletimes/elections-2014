@@ -26,8 +26,10 @@
               <%= result.candidate %> - <%= result.votes.toLocaleString() %> (<%= result.percent %>%)
           <% } %>
           <% if (race.map) { %>
-          <svg-map src="assets/counties.svg" class="demo">
-{{name}}
+          <svg-map src="assets/counties.svg" data-race="<%= race.code %>">
+{{#winner}}
+  {{candidate}}
+{{/winner}}
           </svg-map>
           <% } %>
           </ul>
@@ -35,7 +37,9 @@
         </section>
       <% }); %>
     </main>
-
+    <script>
+window.mapData = <%= JSON.stringify(election.mapped) %>;
+    </script>
     <script src="app.js"></script>
     <%= " " || t.include("partials/_adFoot.html") %>
     <%= t.include("partials/_workHere.html") %>
