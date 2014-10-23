@@ -1,5 +1,6 @@
 var fs = require("fs");
 var request = require("request");
+var project = require("../../project.json");
 
 var url = "http://your.kingcounty.gov/elections/2014/nov-general/results/pi.txt";
 
@@ -89,7 +90,7 @@ var parser = {
 
 var getData = function(c) {
   var cache = "./temp/king.json";
-  if (fs.existsSync(cache)) {
+  if (project.caching && fs.existsSync(cache)) {
     if (fs.statSync(cache).mtime > (new Date(Date.now() - 5 * 60 * 1000))) {
       var data = JSON.parse(fs.readFileSync(cache));
       return c(null, data);
@@ -100,10 +101,12 @@ var getData = function(c) {
     // result.forEach(function(row) {
     //   console.log(row.name, row.results.map(function(result) { return result.candidate }));
     // });
-    if (!fs.existsSync("./temp")) {
-      fs.mkdirSync("./temp");
+    if (project.caching) {
+      if (!fs.existsSync("./temp")) {
+        fs.mkdirSync("./temp");
+      }
+      fs.writeFileSync(cache, JSON.stringify(result, null, 2));
     }
-    fs.writeFileSync(cache, JSON.stringify(result, null, 2));
     c(null, result);
   });
 };

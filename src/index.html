@@ -20,11 +20,11 @@
         <% races.forEach(function(race) { %>
           <h2><%= race.name %></h2>
           <ul class="results">
-          <% for (var name in race.results) { var result = race.results[name] %>
+          <% race.results.forEach(function(result) { %>
             <li> 
               <div class="bar <%= result.party %>" style="width: <%= result.percent %>%"></div>
               <%= result.candidate %> - <%= result.votes.toLocaleString() %> (<%= result.percent %>%)
-          <% } %>
+          <% }) %>
           <% if (race.map) { %>
           <svg-map src="assets/counties.svg" data-race="<%= race.code %>">
 {{#winner}}

@@ -26,6 +26,7 @@ module.exports = function(grunt) {
       var statewide = results[0];
       var counties = results[1];
       var king = results[2];
+
       //attach results to races
       var raceConfig = grunt.file.readJSON("json/Election2014_Races.json");
       var races = {};
@@ -33,7 +34,7 @@ module.exports = function(grunt) {
       var featured = [];
       raceConfig.forEach(function(row) {
         races[row.code] = row;
-        row.results = {};
+        row.results = [];
         var cat = row.category || "none";
         if (!categorized[cat]) {
           categorized[cat] = [];
@@ -46,8 +47,10 @@ module.exports = function(grunt) {
 
       statewide.forEach(function(result) {
         var race = races[result.race];
-        race.results[result.candidate] = result;
+        race.results.push(result);
       });
+
+      //TODO: aggregate county results
 
       //add county data to mappable races
       var mapped = {};
@@ -57,10 +60,6 @@ module.exports = function(grunt) {
           var countyMap = {};
           counties.forEach(function(result) {
             if (result.race == id) {
-              //testing data
-              if (debug) {
-                result.votes = Math.round(Math.random() * 1000);
-              }
               if (!countyMap[result.location]) {
                 countyMap[result.location] = {
                   winner: result,
@@ -77,26 +76,6 @@ module.exports = function(grunt) {
           race.map = mapped[id] = countyMap;
         }
       });
-
-      //add fake data
-      if (debug) {
-        for (var id in races) {
-          var race = races[id];
-          var total = 0;
-          var candidates = Object.keys(race.results);
-          candidates.forEach(function(name) {
-            var result = race.results[name];
-            var votes = Math.round(Math.random() * 1000);
-            result.votes = votes;
-            total += votes;
-          });
-          //now find percentages
-          candidates.forEach(function(name) {
-            var result = race.results[name];
-            result.percent = (result.votes / total * 100).toFixed(1);
-          });
-        }
-      }
 
       var categories = ["Featured"].concat(Object.keys(categorized).sort());
       categorized.Featured = featured;

@@ -2,22 +2,17 @@ var csv = require("csv");
 var fs = require("fs");
 var request = require("request");
 var aliases = require("./aliases");
+var project = require("../../project.json");
 var configs = {
   statewide: {
     cache: "statewide.json",
-    url: "http://results.vote.wa.gov/results/current/export/20141104_AllState.csv",
+    url: "http://results.vote.wa.gov/results/current/export/MediaResults.txt",
     location: "state"
   },
   counties: {
     cache: "counties.json",
-    url: "http://results.vote.wa.gov/results/current/export/20141104_AllCounties.csv",
-    location: function(d) { return d.County }
-  },
-  precincts: {
-    cache: "precincts.json",
-    url: "http://results.vote.wa.gov/results/current/export/20141104_AllStatePrecincts.csv",
-    location: function(d) { return d.PrecinctCode },
-    filter: function(d) { return d.PrecinctCode != -1 }
+    url: "http://results.vote.wa.gov/results/current/export/MediaResultsByCounty.txt",
+    location: function(d) { return d.CountyName }
   }
 };
 
@@ -25,72 +20,37 @@ var configs = {
 var races = require("../../json/Election2014_Races.json");
 var raceList = races.map(function(d) { return d.code });
 
-/*
-* Very particular race assignment rules - only good for the 2014 midterm!
-*/
 var getRaceID = function(row) {
-  var race = row.Race;
-  var jurisdiction = row.JurisdictionName;
+  var race = row.RaceName;
+  var id = row.RaceID;
 
-  if (jurisdiction.match(/state (measures|executive)/i)) {
-    //ballot measures
-    var prefix = "ballot-";
-    if (race.match(/Advisory/)) {
-      prefix = "advisory-";
+  //look up from spreadsheet - easiest way
+  for (var i = 0; i < races.length; i++) {
+    if (id == races[i].sosraceid) {
+      return races[i].code;
     }
-    return prefix + race.match(/No\. (\d+)/)[1];
-
-  } else if (jurisdiction.match(/congressional/i)) {
-    //US Congress races
-    return "us-rep-" + race.match(/District (\d+)/)[1];
-
-  } else if (jurisdiction.match(/legislative/i)) {
-    //state legislature
-    var district = race.match(/District (\d+)/)[1];
-    if (race.match(/Representative/)) {
-      //get the district and position
-      var position = race.match(/Pos. (\d+)/)[1];
-      return ["state-rep", district, position].join("-");
-    }
-    return ["state-sen", district].join("-");
-
-  } else if (jurisdiction.match(/judicial|(supreme|superior|appeals) court/i)) {
-    //state judiciary
-    var position = race.match(/Position (\d+)/)[1];
-    if (race.match(/Appeals/)) {
-      var division = race.match(/Division (\d+)/)[1];
-      var district = race.match(/District (\d+)/)[1];
-      return ["appeals", division, district, position].join("-");
-    } else if (race.match(/Supreme/)) {
-      return "supreme-" + position;
-    }
-    //superior court
-    return race.match(/^\w+/)[0].toLowerCase() + "-court-" + position;
-
-  } else {
-    //fallback
-    return row.Race;
   }
+
+  return race;
 };
 
 var getResults = function(config, c) {
   var cachePath = "./temp/" + config.cache;
-  if (fs.existsSync(cachePath)) {
+  if (project.caching && fs.existsSync(cachePath)) {
     if (fs.statSync(cachePath).mtime > (new Date(Date.now() - 5 * 60 * 1000))) {
       return c(null, JSON.parse(fs.readFileSync(cachePath)));
     }
   }
   var parser = csv.parse({
     columns: true,
-    auto_parse: true
+    auto_parse: true,
+    delimiter: "\t"
   });
   var rows = [];
   parser.on("data", function(row) {
-    //cull garbage rows
-    if (config.filter && !config.filter(row)) return;
     //transform the data to match our schema
     var raceID = getRaceID(row);
-    var name = aliases.antialias(row.Candidate);
+    var name = aliases.antialias(row.BallotName);
     var candidate = aliases.getCandidateInfo(name);
     if (raceList.indexOf(raceID) < 0) return;
     rows.push({
@@ -100,16 +60,18 @@ var getResults = function(config, c) {
       incumbent: candidate.incumbent,
       description: candidate.description,
       votes: row.Votes,
-      percent: row.PercentageOfTotalVotes,
+      percent: Math.round(row.Votes / row.TotalBallotsCastByRace * 1000) / 10,
       source: "Secretary of State",
       location: typeof config.location == "function" ? config.location(row) : config.location
     });
   });
   parser.on("finish", function() {
-    if (!fs.existsSync("./temp")) {
-      fs.mkdirSync("./temp");
+    if (project.caching) {
+      if (!fs.existsSync("./temp")) {
+        fs.mkdirSync("./temp");
+      }
+      fs.writeFileSync(cachePath, JSON.stringify(rows, null, 2));
     }
-    fs.writeFileSync(cachePath, JSON.stringify(rows, null, 2));
     c(null, rows);
   });
   request(config.url).pipe(parser);
