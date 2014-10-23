@@ -5,14 +5,27 @@ var url = "http://your.kingcounty.gov/elections/2014/nov-general/results/pi.txt"
 
 var parser = {
   index: 0,
-  mode: "search",
+  mode: "init",
   buffer: null,
   parsed: [],
+  regex: {
+    nameRow: null,
+    result: /([\s\S]+?)\s{2,}\w+\s+([\d.]+)\s+([\d.]+)%/
+  },
+  findNonBlank: function(index) {
+    while (index < this.lines.length) {
+      var line = this.lines[index];
+      if (line.trim()) {
+        return line;
+      }
+      index++;
+    }
+  },
   parseLine: function(line) {
     switch (this.mode) {
 
     case "search":
-      if (line.match(/^\s{7}\w/)) {
+      if (line.match(this.regex.nameRow)) {
         //matched the start of a race
         if (this.buffer) {
           console.error("Buffer not cleared!", this.buffer);
@@ -26,14 +39,16 @@ var parser = {
       break;
 
     case "race":
-      //blank lines should push the buffer and reset the parser, so should bad indentation
-      if (!line.trim() || line.match(/^\s{7}\w/)) {
+      //indentation changes reset the buffer, but blank lines do not
+      if (!line.trim()) return;
+      if (line.match(this.regex.nameRow)) {
         this.mode = "search";
         this.parsed.push(this.buffer);
         this.buffer = null;
+        return true;
       } else if (line.match(/\d%$/)) { //result lines end with percentages
         line = line.trim();
-        var matches = line.match(/([\s\S]+?)\s{2,}\w+\s+([\d.]+)\s+([\d.]+)%/);
+        var matches = line.match(this.regex.result);
         var result = {
           candidate: matches[1],
           votes: matches[2] * 1,
@@ -43,17 +58,28 @@ var parser = {
       }
       break;
 
+    //start by looking for the first race name
+    case "init":
+      if (line.match(/nov.*4, 2014/i)) {
+        var next = this.findNonBlank(this.index + 1);
+        var padding = next.match(/^\s+/)[0];
+        this.regex.nameRow = new RegExp("^" + padding + "\\w");
+        this.mode = "search";
+      }
 
     }
   },
   parse: function(doc) {
-    var lines = doc.replace(/\r/g, "").split("\n");
+    var lines = this.lines = doc.replace(/\r/g, "").split("\n");
     while (this.index < lines.length) {
       var line = lines[this.index];
       var result = this.parseLine(line);
       if (!result) {
         this.index++;
       }
+    }
+    if (this.buffer) {
+      this.parsed.push(this.buffer);
     }
     return this.parsed;
   }
@@ -62,6 +88,9 @@ var parser = {
 var getData = function(c) {
   request(url, function(err, response, body) {
     var result = parser.parse(body);
+    result.forEach(function(row) {
+      console.log(row.name, row.results.map(function(result) { return result.candidate }));
+    });
     c(null, result);
   });
 };
