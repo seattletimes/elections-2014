@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 
   //call various adapters to get resources
   var secState = require("./lib/secState");
-  var king = require("./lib/king");
+  var kingCounty = require("./lib/king");
 
   grunt.registerTask("scrape", "Pull data from election result endpoints", function() {
 
@@ -22,17 +22,10 @@ module.exports = function(grunt) {
 
     var c = this.async();
 
-    king(function(err, data) {
-      console.log(data);
-      c();
-    });
-
-    return;
-    /* end test */
-
-    async.parallel([secState.statewide, secState.counties], function(err, results) {
+    async.parallel([secState.statewide, secState.counties, kingCounty], function(err, results) {
       var statewide = results[0];
       var counties = results[1];
+      var king = results[2];
       //attach results to races
       var raceConfig = grunt.file.readJSON("json/Election2014_Races.json");
       var races = {};
@@ -64,6 +57,7 @@ module.exports = function(grunt) {
           var countyMap = {};
           counties.forEach(function(result) {
             if (result.race == id) {
+              //testing data
               if (debug) {
                 result.votes = Math.round(Math.random() * 1000);
               }

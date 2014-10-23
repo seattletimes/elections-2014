@@ -62,7 +62,7 @@ var parser = {
 var getData = function(c) {
   request(url, function(err, response, body) {
     var result = parser.parse(body);
-    console.log(JSON.stringify(result, null, 2));
+    c(null, result);
   });
 };
 
