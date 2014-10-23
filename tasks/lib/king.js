@@ -63,6 +63,7 @@ var parser = {
       if (line.match(/nov.*4, 2014/i)) {
         var next = this.findNonBlank(this.index + 1);
         var padding = next.match(/^\s+/)[0];
+        //we build a custom regex to handle it in case they change their indentation scheme
         this.regex.nameRow = new RegExp("^" + padding + "\\w");
         this.mode = "search";
       }
@@ -78,6 +79,7 @@ var parser = {
         this.index++;
       }
     }
+    //push remaining races in the buffer over to the parsed list
     if (this.buffer) {
       this.parsed.push(this.buffer);
     }
@@ -86,11 +88,22 @@ var parser = {
 };
 
 var getData = function(c) {
+  var cache = "./temp/king.json";
+  if (fs.existsSync(cache)) {
+    if (fs.statSync(cache).mtime > (new Date(Date.now() - 5 * 60 * 1000))) {
+      var data = JSON.parse(fs.readFileSync(cache));
+      return c(null, data);
+    }
+  }
   request(url, function(err, response, body) {
     var result = parser.parse(body);
-    result.forEach(function(row) {
-      console.log(row.name, row.results.map(function(result) { return result.candidate }));
-    });
+    // result.forEach(function(row) {
+    //   console.log(row.name, row.results.map(function(result) { return result.candidate }));
+    // });
+    if (!fs.existsSync("./temp")) {
+      fs.mkdirSync("./temp");
+    }
+    fs.writeFileSync(cache, JSON.stringify(result, null, 2));
     c(null, result);
   });
 };
