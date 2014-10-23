@@ -13,7 +13,6 @@ module.exports = function(grunt) {
 
   //call various adapters to get resources
   var secState = require("./lib/secState");
-  var alias = require("./lib/aliases");
 
   grunt.registerTask("scrape", "Pull data from election result endpoints", function() {
 
@@ -46,11 +45,6 @@ module.exports = function(grunt) {
       statewide.forEach(function(result) {
         var race = races[result.race];
         race.results[result.candidate] = result;
-        //merge in the candidate info
-        var realName = alias.antialias(result.candidate);
-        var candidate = alias.getCandidateInfo(realName);
-        result.party = candidate.party;
-        result.incumbent = candidate.incumbent;
       });
 
       //add county data to mappable races
@@ -61,8 +55,6 @@ module.exports = function(grunt) {
           var countyMap = {};
           counties.forEach(function(result) {
             if (result.race == id) {
-              var candidateInfo = alias.getCandidateInfo(result.candidate);
-              result.party = candidateInfo.party;
               if (debug) {
                 result.votes = Math.round(Math.random() * 1000);
               }

@@ -1,6 +1,7 @@
 var csv = require("csv");
 var fs = require("fs");
 var request = require("request");
+var aliases = require("./aliases");
 var configs = {
   statewide: {
     cache: "statewide.json",
@@ -89,10 +90,15 @@ var getResults = function(config, c) {
     if (config.filter && !config.filter(row)) return;
     //transform the data to match our schema
     var raceID = getRaceID(row);
+    var name = aliases.antialias(row.Candidate);
+    var candidate = aliases.getCandidateInfo(name);
     if (raceList.indexOf(raceID) < 0) return;
     rows.push({
       race: getRaceID(row),
-      candidate: row.Candidate, //implement candidate aliasing
+      candidate: name,
+      party: candidate.party,
+      incumbent: candidate.incumbent,
+      description: candidate.description,
       votes: row.Votes,
       percent: row.PercentageOfTotalVotes,
       source: "Secretary of State",
