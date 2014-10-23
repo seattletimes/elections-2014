@@ -38,9 +38,17 @@ require([
     $(this).addClass("active");
     $("section.category").hide();
     $(href).show();
+    window.history.replaceState(href, "", href);
   });
 
-  $("a.tab:first").click();
+  var hash = window.location.hash;
+  if (hash) {
+    //restore place from the URL hash
+    var selector = "a.tab[href=%]".replace("%", hash);
+    $(selector).click();
+  } else {
+    $("a.tab:first").click();
+  }
 
   document.body.className = "";
 
