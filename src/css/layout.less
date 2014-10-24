@@ -2,22 +2,34 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   font-family: sans-serif;
+  overflow: auto;
+  padding: 0 16px;
 }
 
+@ad-size: 300px;
+
 .elections {
-  width: ~"calc(100% - 300px)";
+  width: calc(~"100% - " @ad-size + 25px);
+  margin-right: 24px;
+  border-right: 1px solid black;
   float: left;
 
   @media @tablet {
     width: 100%;
+    border-right: none;
+    float: none;
   }
 }
 
 .rail {
-  width: 300px;
+  width: @ad-size;
   float: left;
 
   @media @tablet {
     display: none;
   }
+}
+
+footer.bottom {
+  clear: both;
 }

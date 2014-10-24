@@ -14,7 +14,7 @@
       </div>
       <h1>2014 Midterm Elections</h1>
       <p> Chatter chatter chatter
-    </head>
+    </header>
 
     <div class="elections">
       <nav class="tab-container">
@@ -25,8 +25,9 @@
       <main>
         <% election.categories.forEach(function(cat) { var races = election.categorized[cat]; %>
           <section class="category" id="<%= cat.replace(/\s/g, "") %>">
+            <h2>Races - <%= cat %></h2>
           <% races.forEach(function(race) { %>
-            <h2><%= race.name %></h2>
+            <h3><%= race.name %></h3>
             <ul class="results">
             <% race.results.forEach(function(result) { %>
               <li> 
@@ -51,7 +52,9 @@
       <div class="fake ad"></div>
     </aside>
 
-
+    <footer class="bottom">
+      This space intentionally left blank.
+    </div>
 
     <script>
 <% 
