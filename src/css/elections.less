@@ -1,0 +1,51 @@
+.elections {
+  padding: 8px 24px 8px 0;
+
+  .tab-container {
+    .tab {
+      display: inline-block;
+      background: #DDD;
+      color: #999;
+      text-decoration: none;
+      padding: 4px 8px;
+
+      &.active {
+        background: #EEE;
+        color: #333;
+      }
+
+      & + .tab {
+        margin-left: 3px;
+      }
+    }
+  }
+
+  .results {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    .bar {
+      height: 10px;
+      background: gray;
+      transition: width 1s ease-in-out .5s;
+
+      .pending & {
+        width: 0px !important;
+      }
+
+      &.R {
+        background: red;
+      }
+
+      &.D {
+        background: blue;
+      }
+    }
+  }
+
+  svg-map {
+    max-width: 100%;
+    width: 400px;
+  }
+}

@@ -5,49 +5,10 @@
   box-sizing: border-box;
 }
 
-svg-map {
-  width: 400px;
-}
 
-.tab-container {
-  .tab {
-    display: inline-block;
-    background: #DDD;
-    color: #999;
-    text-decoration: none;
-    padding: 4px 8px;
+@mobile: ~"(max-width: 480px)";
+@tablet: ~"(max-width: 720px)";
 
-    &.active {
-      background: #EEE;
-      color: #333;
-    }
-
-    & + .tab {
-      margin-left: 3px;
-    }
-  }
-}
-
-.results {
-  margin: 0;
-  padding: 0;
-  list-style-typ: none;
-
-  .bar {
-    height: 10px;
-    background: gray;
-    transition: width 1s ease-in-out .5s;
-
-    .pending & {
-      width: 0px !important;
-    }
-
-    &.R {
-      background: red;
-    }
-
-    &.D {
-      background: blue;
-    }
-  }
-}
+@import "layout";
+@import "elections";
+@import "rail";

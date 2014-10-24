@@ -1,0 +1,23 @@
+body {
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: sans-serif;
+}
+
+.elections {
+  width: ~"calc(100% - 300px)";
+  float: left;
+
+  @media @tablet {
+    width: 100%;
+  }
+}
+
+.rail {
+  width: 300px;
+  float: left;
+
+  @media @tablet {
+    display: none;
+  }
+}

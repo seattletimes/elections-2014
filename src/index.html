@@ -8,35 +8,51 @@
     <%= t.include("partials/_adHead.html") %>
   </head>
   <body class="pending">
+    <header class="top">
+      <div class="ad">
+        <div class="fake ad"></div>
+      </div>
+      <h1>2014 Midterm Elections</h1>
+      <p> Chatter chatter chatter
+    </head>
 
-    <nav class="tab-container">
-      <% election.categories.forEach(function(cat) { %>
-      <a class="tab" href="#<%= cat.replace(/\s/g, "") %>"><%= cat %></a>
-      <% }) %>
-    </nav>
-    <main>
-      <% election.categories.forEach(function(cat) { var races = election.categorized[cat]; %>
-        <section class="category" id="<%= cat.replace(/\s/g, "") %>">
-        <% races.forEach(function(race) { %>
-          <h2><%= race.name %></h2>
-          <ul class="results">
-          <% race.results.forEach(function(result) { %>
-            <li> 
-              <div class="bar <%= result.party %>" style="width: <%= result.percent %>%"></div>
-              <%= result.candidate %> - <%= result.votes.toLocaleString() %> (<%= result.percent %>%)
-          <% }) %>
-          <% if (race.map) { %>
-          <svg-map src="assets/counties.svg" data-race="<%= race.code %>">
-{{#winner}}
-  {{candidate}} - {{votes}} ({{percent}}%)
-{{/winner}}
-          </svg-map>
-          <% } %>
-          </ul>
+    <div class="elections">
+      <nav class="tab-container">
+        <% election.categories.forEach(function(cat) { %>
+        <a class="tab" href="#<%= cat.replace(/\s/g, "") %>"><%= cat %></a>
+        <% }) %>
+      </nav>
+      <main>
+        <% election.categories.forEach(function(cat) { var races = election.categorized[cat]; %>
+          <section class="category" id="<%= cat.replace(/\s/g, "") %>">
+          <% races.forEach(function(race) { %>
+            <h2><%= race.name %></h2>
+            <ul class="results">
+            <% race.results.forEach(function(result) { %>
+              <li> 
+                <div class="bar <%= result.party %>" style="width: <%= result.percent %>%"></div>
+                <%= result.candidate %> - <%= result.votes.toLocaleString() %> (<%= result.percent %>%)
+            <% }) %>
+            <% if (race.map) { %>
+            <svg-map src="assets/counties.svg" data-race="<%= race.code %>">
+  {{#winner}}
+    {{candidate}} - {{votes}} ({{percent}}%)
+  {{/winner}}
+            </svg-map>
+            <% } %>
+            </ul>
+          <% }); %>
+          </section>
         <% }); %>
-        </section>
-      <% }); %>
-    </main>
+      </main>
+    </div>
+
+    <aside class="rail">
+      <div class="fake ad"></div>
+    </aside>
+
+
+
     <script>
 <% 
 for (var raceID in election.mapped) {
