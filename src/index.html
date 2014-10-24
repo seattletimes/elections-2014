@@ -1,4 +1,20 @@
 <!doctype html>
+<%
+var now = new Date();
+var month = ["October", "November", "December"][now.getMonth() - 9];
+var day = now.getDate();
+var hours = now.getHours();
+var minutes = now.getMinutes() + "";
+if (minutes.length == 1) {
+  minutes = "0" + minutes;
+}
+var time;
+if (hours < 13) {
+  time = hours + ":" + minutes + " am";
+} else {
+  time = hours - 12 + ":" + minutes + " pm";
+}
+%>
 <html>
   <head>
     <title><%= json.project.title %></title>
@@ -8,50 +24,66 @@
     <%= t.include("partials/_adHead.html") %>
   </head>
   <body class="pending">
-    <header class="top">
-      <div class="ad">
-        <div class="fake ad"></div>
-      </div>
-      <h1>2014 Midterm Elections</h1>
-      <p> 
-        View state and local election results by race and see county-by-county results for key statewide races. Uncontested races are not included. For complete Washington state results, visit the <a href="http://results.vote.wa.gov/results/current/">Washington Secretary of State</a>.
-    </header>
 
-    <div class="elections">
-      <nav class="tab-container">
-        <% election.categories.forEach(function(cat) { %>
-        <a class="tab" href="#<%= cat.replace(/\s/g, "") %>"><%= cat %></a>
-        <% }) %>
-      </nav>
-      <main>
-        <% election.categories.forEach(function(cat) { var races = election.categorized[cat]; %>
-          <section class="category" id="<%= cat.replace(/\s/g, "") %>">
-            <h2>Races - <%= cat %></h2>
-          <% races.forEach(function(race) { %>
-            <h3><%= race.name %></h3>
-            <ul class="results">
-            <% race.results.forEach(function(result) { %>
-              <li> 
-                <div class="bar <%= result.party %>" style="width: <%= result.percent %>%"></div>
-                <%= result.candidate %> - <%= result.votes.toLocaleString() %> (<%= result.percent %>%)
-            <% }) %>
-            <% if (race.map) { %>
-            <svg-map src="assets/counties.svg" data-race="<%= race.code %>">
-  {{#winner}}
-    {{candidate}} - {{votes}} ({{percent}}%)
-  {{/winner}}
-            </svg-map>
-            <% } %>
-            </ul>
+    <nav class="bar">
+      <a href="http://seattletimes.com">
+        <img src="http://seattletimes.com/art/ui/seattletimeslogo_home.svg" class="logo">
+      </a>
+      <h2 class="section-title">Politics</h2>
+    </nav>
+
+    <div class="content">
+
+      <header class="hed">
+        <div class="ad">
+          <div class="fake ad"></div>
+        </div>
+        <div class="section-fronts">
+          <a href="">Local News</a> | <a href="">Politics</a>
+        </div>
+        <h1>2014 Midterm Elections</h1>
+        <p class="dateline">Published <%= month %> <%= day %>, 2014 at <%= time %>
+      </header>
+      
+      <main class="elections">
+        <p class="cutline"> 
+          View state and local election results by race and see county-by-county results for key statewide races. Uncontested races are not included. For complete Washington state results, visit the <a href="http://results.vote.wa.gov/results/current/">Washington Secretary of State</a>.
+        <nav class="tab-container">
+          <% election.categories.forEach(function(cat) { %>
+          <a class="tab" href="#<%= cat.replace(/\s/g, "") %>"><%= cat %></a>
+          <% }) %>
+        </nav>
+        <article>
+          <% election.categories.forEach(function(cat) { var races = election.categorized[cat]; %>
+            <section class="category" id="<%= cat.replace(/\s/g, "") %>">
+              <h2>Races - <%= cat %></h2>
+            <% races.forEach(function(race) { %>
+              <h3><%= race.name %></h3>
+              <ul class="results">
+              <% race.results.forEach(function(result) { %>
+                <li> 
+                  <div class="bar <%= result.party %>" style="width: <%= result.percent %>%"></div>
+                  <%= result.candidate %> - <%= result.votes.toLocaleString() %> (<%= result.percent %>%)
+              <% }) %>
+              <% if (race.map) { %>
+              <svg-map src="assets/counties.svg" data-race="<%= race.code %>">
+    {{#winner}}
+      {{candidate}} - {{votes}} ({{percent}}%)
+    {{/winner}}
+              </svg-map>
+              <% } %>
+              </ul>
+            <% }); %>
+            </section>
           <% }); %>
-          </section>
-        <% }); %>
+        </article>
       </main>
-    </div>
 
-    <aside class="rail">
-      <div class="fake ad"></div>
-    </aside>
+      <aside class="rail">
+        <div class="fake ad"></div>
+      </aside>
+
+    </div>
 
     <footer class="bottom">
       This space intentionally left blank.

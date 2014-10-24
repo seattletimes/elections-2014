@@ -1,31 +1,108 @@
 body {
-  max-width: 1200px;
-  margin: 0 auto;
-  font-family: sans-serif;
+  font-family: @sans;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: @accent;
+  text-decoration: none;
+}
+
+nav.bar {
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, .3);
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  padding: 10px 20px;
+  transform: translateZ(0);
+  height: 44px;
+
+  a {
+    border: none;
+  }
+
+  img {
+    height: 100%;
+  }
+
+  h2.section-title {
+    display: block;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 4px;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 30px;
+  }
+}
+
+
+div.content {
+  max-width: 1024px;
+  margin: 50px auto 0;
   overflow: auto;
   padding: 0 16px;
 }
 
-header.top {
-  .fake.ad {
-    width: 700px;
-    height: 90px;
-    background: gray;
-    margin: auto;
+header.hed {
+
+  .ad {
+    padding: 10px 0;
+    margin: 10px 0;
+    border-width: 1px 0;
+    border-color: @gray;
+    border-style: solid;
+
+    .fake.ad {
+      width: 700px;
+      height: 90px;
+      background: gray;
+      margin: auto;
+    }
+
   }
+
+  .section-fronts {
+    font-size: 18px;
+
+    a {
+      font-weight: bold;
+    }
+  }
+
+  h1 {
+    margin: 0;
+    font-family: @serif;
+    font-size: 40px;
+  }
+
+  .dateline {
+    color: @text-gray;
+  }
+
 }
 
 @ad-size: 300px;
 
 .elections {
+
+  .cutline {
+    font-family: @serif;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
   width: calc(~"100% - " @ad-size + 25px);
   margin: 0 24px 24px 0;
-  border-right: 1px solid #CCC;
   float: left;
 
   @media @tablet {
     width: 100%;
-    border-right: none;
     float: none;
   }
 }
