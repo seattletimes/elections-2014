@@ -28,7 +28,7 @@
           <% if (race.map) { %>
           <svg-map src="assets/counties.svg" data-race="<%= race.code %>">
 {{#winner}}
-  {{candidate}}
+  {{candidate}} - {{votes}} ({{percent}}%)
 {{/winner}}
           </svg-map>
           <% } %>
@@ -38,6 +38,18 @@
       <% }); %>
     </main>
     <script>
+<% 
+for (var raceID in election.mapped) {
+  var race = election.mapped[raceID];
+  for (var county in race) {
+    var c = race[county];
+    var votes = c.winner.votes + "";
+    for (var i = votes.length - 3; i > 0; i -= 3) {
+      votes = votes.substr(0, i) + "," + votes.substr(i);
+    }
+    c.winner.votes = votes;
+  }
+} %>
 window.mapData = <%= JSON.stringify(election.mapped) %>;
     </script>
     <script src="app.js"></script>
