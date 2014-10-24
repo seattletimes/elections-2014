@@ -6,12 +6,21 @@ body {
   padding: 0 16px;
 }
 
+header.top {
+  .fake.ad {
+    width: 700px;
+    height: 90px;
+    background: gray;
+    margin: auto;
+  }
+}
+
 @ad-size: 300px;
 
 .elections {
   width: calc(~"100% - " @ad-size + 25px);
-  margin-right: 24px;
-  border-right: 1px solid black;
+  margin: 0 24px 24px 0;
+  border-right: 1px solid #CCC;
   float: left;
 
   @media @tablet {
@@ -32,4 +41,6 @@ body {
 
 footer.bottom {
   clear: both;
+  background: #CCC;
+  padding: 24px;
 }

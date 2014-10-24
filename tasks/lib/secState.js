@@ -16,11 +16,7 @@ var configs = {
   }
 };
 
-//pull the race config so as to filter out county data we don't care about.
-var races = require("../../json/Election2014_Races.json");
-var raceList = races.map(function(d) { return d.code });
-
-var getRaceID = function(row) {
+var getRaceID = function(races, row) {
   var race = row.RaceName;
   var id = row.RaceID;
 
@@ -35,6 +31,9 @@ var getRaceID = function(row) {
 };
 
 var getResults = function(config, c) {
+  //load results during call, not startup, to let `sheets` run
+  var races = JSON.parse(fs.readFileSync("./json/Election2014_Races.json", { encoding: "utf8" }));
+  var raceList = races.filter(function(d) { return !d.uncontested }).map(function(d) { return d.code });
   var cachePath = "./temp/" + config.cache;
   if (project.caching && fs.existsSync(cachePath)) {
     if (fs.statSync(cachePath).mtime > (new Date(Date.now() - 5 * 60 * 1000))) {
@@ -49,12 +48,13 @@ var getResults = function(config, c) {
   var rows = [];
   parser.on("data", function(row) {
     //transform the data to match our schema
-    var raceID = getRaceID(row);
+    var raceID = getRaceID(races, row);
     var name = aliases.antialias(row.BallotName);
     var candidate = aliases.getCandidateInfo(name);
     if (raceList.indexOf(raceID) < 0) return;
+
     rows.push({
-      race: getRaceID(row),
+      race: raceID,
       candidate: name,
       party: candidate.party,
       incumbent: candidate.incumbent,
@@ -64,6 +64,7 @@ var getResults = function(config, c) {
       source: "Secretary of State",
       location: typeof config.location == "function" ? config.location(row) : config.location
     });
+
   });
   parser.on("finish", function() {
     if (project.caching) {

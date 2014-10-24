@@ -28,7 +28,7 @@ module.exports = function(grunt) {
       var king = results[2];
 
       //attach results to races
-      var raceConfig = grunt.file.readJSON("json/Election2014_Races.json");
+      var raceConfig = grunt.file.readJSON("json/Election2014_Races.json").filter(function(d) { return !d.uncontested });
       var races = {};
       var categorized = {};
       var featured = [];
