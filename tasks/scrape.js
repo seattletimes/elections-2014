@@ -85,12 +85,11 @@ module.exports = function(grunt) {
 
       //add county data to mappable races
       var mapped = {};
-      Object.keys(races).forEach(function(id) {
-        var race = races[id];
-        if (race.map) {
+      raceConfig.forEach(function(config) {
+        if (config.map) {
           var countyMap = {};
           counties.forEach(function(result) {
-            if (result.race == id) {
+            if (result.race == config.code) {
               if (!countyMap[result.location]) {
                 countyMap[result.location] = {
                   winner: result,
@@ -104,17 +103,20 @@ module.exports = function(grunt) {
               }
             }
           });
-          race.map = mapped[id] = countyMap;
+          races[config.code].map = mapped[config.code] = countyMap;
         }
       });
 
       var categories = ["Featured"].concat(Object.keys(categorized).sort());
       categorized.Featured = featured;
-      races.categorized = categorized;
-      races.categories = categories;
-      races.mapped = mapped;
 
-      grunt.data.election = races;
+      grunt.data.election = {
+        all: races,
+        categorized: categorized,
+        categories: categories,
+        mapped: mapped
+      };
+
       c();
     });
 
