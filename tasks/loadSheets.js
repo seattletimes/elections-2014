@@ -9,8 +9,6 @@ can be accessed by this task.
 
 */
 
-var project = require("../project.json");
-var auth = require("../auth.json");
 var async = require("async");
 var sheets = require("google-spreadsheets");
 
@@ -23,6 +21,9 @@ var camelCase = function(str) {
 module.exports = function(grunt) {
 
   grunt.registerTask("sheets", "Downloads from Google Sheets -> JSON", function() {
+    
+    var project = require("../project.json");
+    var auth = require("../auth.json");
 
     var sheetKeys = project.sheets || (auth.google && auth.google.sheets);
 
