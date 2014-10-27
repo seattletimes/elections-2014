@@ -1,0 +1,39 @@
+<!doctype html>
+<%
+var panels = {};
+json.Election2014_Widget.forEach(function(row) {
+  if (!panels[row.group]) {
+    panels[row.group] = [];
+  }
+  panels[row.group].push(row.race);
+});
+%>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="widget.css">
+  </head>
+  <body>
+    <% for (var group in panels) { var races = panels[group]; %>
+    <section class="panel">
+      <div class="title">
+        <%= group %>
+      </div>
+      <% races.forEach(function(id) { var race = election.all[id]; %>
+      <div class="race">
+        <h2><%= race.name %></h2>
+        <ul class="results">
+          <% race.results.forEach(function(result) { %>
+          <li> <%= result.candidate %>
+          <% }) %>
+        </ul>
+      </div>
+      <% }); %>
+    </section>
+    <% } %>
+    <script src="assets/pym.js"></script>
+    <script>
+var child = new pym.Child({ polling: 500 });
+child.id = "widget";
+    </script>
+  </body>
+</html>

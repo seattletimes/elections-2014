@@ -1,0 +1,22 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@import "values";
+
+section.panel {
+  display: block;
+
+  .race {
+    float: left;
+    width: 25%;
+    min-height: 200px;
+
+    &:nth-child(2n) {
+      background: @gray;
+    }
+  }
+}
