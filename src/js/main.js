@@ -13,6 +13,7 @@ require([
   //   return { name: county };
   // };
 
+  var yes = ["yes", "approved"];
   $("svg-map").each(function(i, map) {
     var raceID = map.getAttribute("data-race");
     var data = window.mapData[raceID];
@@ -20,15 +21,23 @@ require([
       map.eachCounty(function(shape, name) {
         var result = data[name];
         if (result.winner.party) {
-          shape.style.fill = result.winner.party == "D" ? "blue" : "red";
+          map.savage.addClass(shape, result.winner.party == "D" ? "dem" : "rep");
         } else {
-          shape.style.fill = result.winner.candidate == "Yes" ? "green" : "orange";
+          var option = result.winner.candidate.toLowerCase();
+          map.savage.addClass(shape, yes.indexOf(option) > -1 ? "yes" : "no");
         }
       });
       map.getState().getCountyData = function(county) {
         return data[county];
       };
     }
+  });
+
+  $(".map-container:first").addClass("show");
+
+  $(".show-map").on("click", function() {
+    $(".map-container").removeClass("show");
+    $(this).closest(".map-container").addClass("show");
   });
 
   $(document.body).on("click", "a.tab", function(e) {

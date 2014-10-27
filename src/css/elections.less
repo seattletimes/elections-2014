@@ -28,29 +28,89 @@
   }
 
   h3 {
-    margin-bottom: 0;
+    margin-bottom: 3px;
+    clear: both;
+  }
+
+  .result-block {
+    padding: 0 0 4px;
+    border-bottom: 1px solid @gray;
   }
 
   .results {
     margin: 0;
-    padding: 0;
     list-style-type: none;
 
+    li {
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .candidate {
+      width: 50%;
+      float: left;
+      clear: both;
+
+      .numbers {
+        float: right;
+        padding-right: 4px;
+      }
+    }
+
+    .bar-container {
+      width: 50%;
+      float: left;
+    }
+
     .bar {
-      height: 10px;
-      background: gray;
+      height: 20px;
+      background: @n-green;
       transition: width 1s ease-in-out .5s;
+      position: relative;
+
+      .percentage {
+        position: absolute;
+        top: 1px;
+        left: 101%;
+      }
+
+      &.yes {
+        background: @y-green;
+      }
 
       .pending & {
         width: 0px !important;
       }
 
       &.R {
-        background: red;
+        background: @r-red;
       }
 
       &.D {
-        background: blue;
+        background: @d-blue;
+      }
+    }
+  }
+
+  .map-container {
+    text-align: center;
+
+    .show-map {
+      display: block;
+      cursor: pointer;
+    }
+
+    svg-map {
+      display: none;
+    }
+
+    &.show {
+      .show-map {
+        display: none;
+      }
+
+      svg-map {
+        display: inline-block;
       }
     }
   }
@@ -58,5 +118,7 @@
   svg-map {
     max-width: 100%;
     width: 400px;
+    margin: 8px 0;
+    display: inline-block;
   }
 }

@@ -100,6 +100,7 @@ define([
     state.transclude = ich.temp;
     delete ich.temp;
   };
+  mapProto.savage = savage;
 
   document.registerElement("svg-map", { prototype: mapProto });
 });
