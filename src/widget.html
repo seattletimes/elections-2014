@@ -10,20 +10,27 @@ json.Election2014_Widget.forEach(function(row) {
 %>
 <html>
   <head>
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="widget.css">
   </head>
   <body>
     <% for (var group in panels) { var races = panels[group]; %>
     <section class="panel">
-      <div class="title">
+      <h1 class="title">
         <%= group %>
-      </div>
+      </h1>
       <% races.forEach(function(id) { var race = election.all[id]; %>
       <div class="race">
         <h2><%= race.name %></h2>
+        <% if (race.description) { %>
+        <p class="description"><%= race.description %>
+        <% } %>
         <ul class="results">
           <% race.results.forEach(function(result) { %>
           <li> <%= result.candidate %>
+            <% if (result.party) { %> - <%= result.party %><% }%>
+            <span class="numbers">
+              <%= t.formatNumber(result.votes) %> (<%= result.percent %>%)
           <% }) %>
         </ul>
       </div>
@@ -34,6 +41,31 @@ json.Election2014_Widget.forEach(function(row) {
     <script>
 var child = new pym.Child({ polling: 500 });
 child.id = "widget";
+
+var qsa = function(s) { return Array.prototype.slice.call(document.querySelectorAll(s)) };
+
+//auto-rotate
+var interval = 8 * 1000;
+var animate = function(element) {
+  return function() {
+    element.setAttribute("animate", "");
+  }
+};
+
+var rotate = function() {
+  var current = document.querySelector(".panel[show]");
+  var next;
+  if (current) {
+    current.removeAttribute("show");
+    current.removeAttribute("animate");
+    next = current.nextElementSibling;
+  }
+  if (!next || next.className != "panel") next = document.querySelector(".panel");
+  next.setAttribute("show", "");
+  setTimeout(animate(next), 10);
+  setTimeout(rotate, interval);
+}
+rotate();
     </script>
   </body>
 </html>

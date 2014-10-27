@@ -7,16 +7,71 @@
 
 @import "values";
 
+body {
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+}
+
 section.panel {
-  display: block;
+  clear: both;
+  display: none;
+  opacity: 0;
+  transition: opacity .3s linear .1s;
+
+  &[show] {
+    display: block;
+  }
+
+  &[animate] {
+    opacity: 1;
+  }
+
+  .title {
+    text-align: center;
+    color: @text-gray;
+    font-weight: bold;
+    display: block;
+    font-size: 16px;
+    margin: 0;
+  }
 
   .race {
     float: left;
     width: 25%;
-    min-height: 200px;
+    min-height: 100px;
+    padding: 8px;
+    border-left: 1px solid @gray;
 
-    &:nth-child(2n) {
-      background: @gray;
+    h2 {
+      margin: 0;
+      font-size: 15px;
     }
+
+    .description {
+      color: @text-gray;
+      font-size: 13px;
+      margin: 0;
+    }
+
+    &:first-of-type {
+      border-left: none;
+    }
+
+    .results {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+
+      li {
+        border-bottom: 1px dotted @gray;
+        position: relative;
+
+        .numbers {
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
+      }
+    }
+
   }
 }

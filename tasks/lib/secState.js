@@ -37,6 +37,7 @@ var getResults = function(config, c) {
   var cachePath = "./temp/" + config.cache;
   if (project.caching && fs.existsSync(cachePath)) {
     if (fs.statSync(cachePath).mtime > (new Date(Date.now() - 5 * 60 * 1000))) {
+      console.log("Using cached:", config.url);
       return c(null, JSON.parse(fs.readFileSync(cachePath)));
     }
   }

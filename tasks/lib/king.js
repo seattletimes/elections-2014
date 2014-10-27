@@ -92,6 +92,7 @@ var getData = function(c) {
   var cache = "./temp/king.json";
   if (project.caching && fs.existsSync(cache)) {
     if (fs.statSync(cache).mtime > (new Date(Date.now() - 5 * 60 * 1000))) {
+      console.log("Using cached:", url);
       var data = JSON.parse(fs.readFileSync(cache));
       return c(null, data);
     }
