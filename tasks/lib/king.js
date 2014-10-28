@@ -4,6 +4,53 @@ var project = require("../../project.json");
 
 var url = "http://your.kingcounty.gov/elections/2014/nov-general/results/pi.txt";
 
+var hyphenate = function(s) {
+  return s.toLowerCase().replace(/\s+/g, "-");
+};
+
+var getRaceID = function(title) {
+  //horrible, horrible regex conversion steps to follow
+  if (title.match(/^City of.*Prop/)) {
+    //find the city and proposition number
+    //handle weird Seattle Prop 1A/B first
+    if (title.match(/1A and 1B/)) {
+      if (title.match(/cont/)) {
+        return "seattle-prop-1b";
+      }
+      return "seattle-prop-1a";
+    } else {
+      var matches = title.match(/City of (.*?) Proposition No\. (\w+)/);
+      if (!matches) throw "Couldn't identify race: " + title;
+      return [hyphenate(matches[1]), "prop", matches[2].toLowerCase()].join("-");
+    }
+  } else if (title.match(/^district court/i)) {
+    //district court positions
+    var matches = title.match(/^District Court (\w+).*?Position No\. (\d+)/);
+    if (!matches) throw "Couldn't identify race: " + title;
+    return [matches[1].toLowerCase(), "judge", matches[2]].join("-");
+  } else if (title.match(/^highline/i)) {
+    //one highline school district proposition
+    return "highline-prop-1";
+  } else if (title.match(/king.*prosecuting.*attorney/i)) {
+    //King County prosecutor
+    return "king-prosecutor";
+  } else if (title.match(/monorail/i)) {
+    //Monorail! Monorail! Monorail!
+    return "monorail";
+  } else if (title.match(/^seattle municipal court/i)) {
+    var matches = title.match(/\d+/);
+    if (!matches) throw "Couldn't identify race: " + title;
+    return "seattle-judge-" + matches[0];
+  } else if (title.match(/^seattle transportation/i)) {
+    //Seattle Transportation Benefit (buses)
+    return "seattle-transport-1";
+  } else if (title.match(/si view/i)) {
+    //Si View parks
+    return "si-view-prop-1";
+  }
+  return "redundant";
+};
+
 var parser = {
   index: 0,
   mode: "init",
@@ -31,10 +78,18 @@ var parser = {
         if (this.buffer) {
           console.error("Buffer not cleared!", this.buffer);
         }
+        var trimmed = line.trim();
+        var id = getRaceID(trimmed);
+
+        //jump out on races we already get from SoS
+        if (id == "redundant") return;
+
         this.buffer = {
-          name: line.trim(),
+          name: trimmed,
+          race: id,
           results: []
         };
+
         this.mode = "race";
       }
       break;
@@ -47,9 +102,13 @@ var parser = {
         this.parsed.push(this.buffer);
         this.buffer = null;
         return true;
-      } else if (line.match(/\d%$/)) { //result lines end with percentages
+      } else if (line.match(/\d\%$/)) { //result lines end with percentages
         line = line.trim();
         var matches = line.match(this.regex.result);
+        if (!matches) {
+          //precinct counting lines or other garbage
+          return;
+        }
         var result = {
           candidate: matches[1],
           votes: matches[2] * 1,

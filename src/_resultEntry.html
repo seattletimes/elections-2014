@@ -1,0 +1,35 @@
+<% 
+var t = grunt.template;
+var yes = ["yes", "approved"];
+%>
+<div class="result-block">
+  <h3><%= race.name %></h3>
+  <ul class="results">
+  <% race.results.forEach(function(result, i) { %>
+    <li> 
+      <div class="candidate">
+        <%= result.candidate %>
+        <%= result.party ? " - " + result.party : "" %>
+        <span class="numbers"><%= t.formatNumber(result.votes) %></span>
+      </div>
+      <div class="bar-container">
+        <div 
+          class="bar <%= result.party %> <%= yes.indexOf(result.candidate.toLowerCase()) > -1 ? "yes" : "" %>" 
+          style="width: <%= result.percent * .8 %>%">
+          <div class="percentage"><%= result.percent %>%</div>
+        </div>
+      </div>
+    </li>
+  <% }) %>
+  </ul>
+  <% if (race.map) { %>
+  <div class="map-container">
+    <a class="show-map">Show map</a>
+    <svg-map src="assets/counties.svg" data-race="<%= race.code %>">
+{{#winner}}
+{{candidate}} - {{votes}} ({{percent}}%)
+{{/winner}}
+    </svg-map>
+  </div>
+  <% } %>
+</div>

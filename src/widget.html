@@ -14,6 +14,7 @@ json.Election2014_Widget.forEach(function(row) {
     <link rel="stylesheet" type="text/css" href="widget.css">
   </head>
   <body>
+    <a class="pause-resume">Pause</a>
     <% for (var group in panels) { var races = panels[group]; %>
     <section class="panel">
       <h1 class="title">
@@ -63,7 +64,9 @@ var rotate = function() {
   if (!next || next.className != "panel") next = document.querySelector(".panel");
   next.setAttribute("show", "");
   setTimeout(animate(next), 10);
-  setTimeout(rotate, interval);
+  if (auto) {
+    setTimeout(rotate, interval);
+  }
 }
 rotate();
     </script>

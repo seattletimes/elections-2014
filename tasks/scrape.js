@@ -23,6 +23,7 @@ module.exports = function(grunt) {
     var c = this.async();
 
     async.parallel([secState.statewide, secState.counties, kingCounty], function(err, results) {
+
       var statewide = results[0];
       var counties = results[1];
       var king = results[2];
@@ -33,13 +34,24 @@ module.exports = function(grunt) {
       var categorized = {};
       var featured = [];
       raceConfig.forEach(function(row) {
-        races[row.code] = row;
+        races[row.code || row.sosraceid] = row;
         row.results = [];
         var cat = row.category || "none";
         if (!categorized[cat]) {
-          categorized[cat] = [];
+          categorized[cat] = {
+            races: [],
+            grouped: {}
+          };
         }
-        categorized[cat].push(row);
+        var subcat = row.subcategory;
+        if (row.subcategory) {
+          if (!categorized[cat].grouped[subcat]) {
+            categorized[cat].grouped[subcat] = [];
+          }
+          categorized[cat].grouped[subcat].push(row);
+        } else {
+          categorized[cat].races.push(row);
+        }
         if (row.featured) {
           featured.push(row);
         }
@@ -48,6 +60,13 @@ module.exports = function(grunt) {
       statewide.forEach(function(result) {
         var race = races[result.race];
         race.results.push(result);
+      });
+
+      //add King county results
+      king.forEach(function(entry) {
+        var exists = races[entry.race];
+        if (!exists) return console.log("Not including King race:", entry.race);
+        races[entry.race].results = entry.results;
       });
 
       //aggregate county results
@@ -108,7 +127,7 @@ module.exports = function(grunt) {
       });
 
       var categories = ["Featured"].concat(Object.keys(categorized).sort());
-      categorized.Featured = featured;
+      categorized.Featured = { races: featured, grouped: {} };
 
       grunt.data.election = {
         all: races,

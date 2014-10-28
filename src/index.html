@@ -14,7 +14,6 @@ if (hours < 13) {
 } else {
   time = hours - 12 + ":" + minutes + " pm";
 }
-var yes = ["yes", "approved"];
 %>
 <html>
   <head>
@@ -56,42 +55,21 @@ var yes = ["yes", "approved"];
           <% }) %>
         </nav>
         <article>
-          <% election.categories.forEach(function(cat) { var races = election.categorized[cat]; %>
+          <% election.categories.forEach(function(cat) { var category = election.categorized[cat]; %>
             <section class="category" id="<%= cat.replace(/\s/g, "") %>">
               <h2>Races - <%= cat %></h2>
-            <% races.forEach(function(race) { %>
-              <div class="result-block">
-                <h3><%= race.name %></h3>
-                <ul class="results">
-                <% race.results.forEach(function(result, i) { var option = result.candidate.toLowerCase() %>
-                  <li> 
-                    <div class="candidate">
-                      <%= result.candidate %>
-                      <%= result.party ? " - " + result.party : "" %>
-                      <span class="numbers"><%= t.formatNumber(result.votes) %></span>
-                    </div>
-                    <div class="bar-container">
-                      <div 
-                        class="bar <%= result.party %> <%= yes.indexOf(option) > -1 ? "yes" : "" %>" 
-                        style="width: <%= result.percent * .8 %>%">
-                        <div class="percentage"><%= result.percent %>%</div>
-                      </div>
-                    </div>
-                  </li>
-                <% }) %>
-                </ul>
-                <% if (race.map) { %>
-                <div class="map-container">
-                  <a class="show-map">Show map</a>
-                  <svg-map src="assets/counties.svg" data-race="<%= race.code %>">
-  {{#winner}}
-    {{candidate}} - {{votes}} ({{percent}}%)
-  {{/winner}}
-                  </svg-map>
-                </div>
-                <% } %>
-              </div>
-            <% }); %>
+            <% 
+            var groups = Object.keys(category.grouped);
+            if (groups.length) groups.forEach(function(group) { %>
+              <h2><%= group %></h2><%
+              category.grouped[group].forEach(function(race) {
+                print(t.include("_resultEntry.html", { race: race }));
+              });
+            });
+            category.races.forEach(function(race) {
+              print(t.include("_resultEntry.html", { race: race }));
+            }); 
+            %>
             </section>
           <% }); %>
         </article>
