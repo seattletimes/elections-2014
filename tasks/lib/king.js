@@ -112,7 +112,9 @@ var parser = {
         var result = {
           candidate: matches[1],
           votes: matches[2] * 1,
-          percent: matches[3] * 1
+          percent: matches[3] * 1,
+          source: "King County",
+          location: "King"
         };
         this.buffer.results.push(result);
       }

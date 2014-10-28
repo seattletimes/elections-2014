@@ -22,7 +22,7 @@ module.exports = function(grunt) {
         tasks: ["less"]
       },
       templates: {
-        files: ["src/**/*.html", "csv/**/*.csv"],
+        files: ["src/**/*.html", "csv/**/*.csv", "src/**/*.xml"],
         tasks: ["template"]
       },
       js: {

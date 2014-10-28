@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <objects type="list">
+    <% Object.keys(election.all).forEach(function(code, i) { var race = election.all[code]; %>
+    <object>
+      <name><%- race.name %></name>
+      <race_position type="integer"><%= i %></race_position>
+      <slug><%= code %></slug>
+      <other_location><% race.location %></other_location>
+      <candidates type="list">
+        <% race.results.forEach(function(result) { %>
+        <object>
+          <name><%- result.candidate %></name>
+          <race><%= code %></race>
+          <slug><%= result.candidate.toLowerCase().replace(/\s+/g, "-") %></slug>
+          <status><%= result.incumbent ? "INCUMBENT" : "" %></status>
+          <resource_uri></resource_uri>
+          <votes type="integer"><%= result.votes %></votes>
+          <order type="integer">0</order>
+          <percentage><%= result.percent %></percentage>
+          <last_modified></last_modified>
+          <party><%= result.party %></party>
+        </object>
+        <% }) %>
+      </candidates>
+    </object>
+    <% }) %>
+  </objects>
+</response>
