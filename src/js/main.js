@@ -32,7 +32,7 @@ require([
     $(this).addClass("active");
     $("section.category").hide();
     $(href).show();
-    window.history.replaceState(href, "", href);
+    if (window.history && window.history.replaceState) window.history.replaceState(href, "", href);
   });
 
   var hash = window.location.hash;
