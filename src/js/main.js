@@ -5,15 +5,7 @@ require([
   "jquery"
 ], function() {
 
-  // var map = document.querySelector(".demo");
-  // map.eachCounty(function(shape, name) {
-  //   shape.style.fill = name == "King" ? "green" : "orange";
-  // });
-  // map.getState().getCountyData = function(county) {
-  //   return { name: county };
-  // };
-
-  var yes = ["yes", "approved"];
+  var yes = ["yes", "approved", "maintained"];
   $("svg-map").each(function(i, map) {
     var raceID = map.getAttribute("data-race");
     var data = window.mapData[raceID];
@@ -31,13 +23,6 @@ require([
         return data[county];
       };
     }
-  });
-
-  $(".map-container:first").addClass("show");
-
-  $(".show-map").on("click", function() {
-    $(".map-container").removeClass("show");
-    $(this).closest(".map-container").addClass("show");
   });
 
   $(document.body).on("click", "a.tab", function(e) {
