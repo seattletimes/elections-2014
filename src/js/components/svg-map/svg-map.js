@@ -34,8 +34,13 @@ define([
     }
     state.lastHover = key;
     var bounds = this.getBoundingClientRect();
+    var popupBounds = popup.getBoundingClientRect();
     popup.style.top = e.clientY + 20 + "px";
-    popup.style.left = e.clientX + "px";
+    if (e.clientX + popupBounds.width > bounds.width) {
+      popup.style.left = (e.clientX - popupBounds.width) + "px";
+    } else {
+      popup.style.left = e.clientX + "px";
+    }
   };
 
   var states = {};
