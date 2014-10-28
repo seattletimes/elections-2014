@@ -24,6 +24,10 @@ nav.bar {
   height: 44px;
   z-index: 99999;
 
+  @media @mobile {
+    text-align: center;
+  }
+
   a {
     border: none;
   }
@@ -43,6 +47,10 @@ nav.bar {
     padding: 0;
     font-size: 30px;
     font-family: @serif;
+
+    @media @mobile {
+      display: none;
+    }
   }
 }
 

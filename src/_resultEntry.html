@@ -9,7 +9,7 @@ var yes = ["yes", "approved", "maintained"];
     <li> 
       <div class="candidate">
         <%= result.candidate %>
-        <%= result.party ? " - " + result.party : "" %>
+        <span class="party"><%= result.party ? " - " + result.party : "" %></span>
         <span class="numbers"><%= t.formatNumber(result.votes) %></span>
       </div>
       <div class="bar-container">
