@@ -19,6 +19,8 @@
   ],
   "dependencies": {
     "seattletimes-pym": "~1.0.0",
-    "rsvp": "~3.0.13"
+    "rsvp": "~3.0.13",
+    "document-register-element": "~0.1.6",
+    "icanhaz": "~0.10.3"
   }
 }
