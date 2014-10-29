@@ -46,6 +46,7 @@ child.id = "widget";
 var qsa = function(s) { return Array.prototype.slice.call(document.querySelectorAll(s)) };
 
 //auto-rotate
+var auto = true;
 var interval = 8 * 1000;
 var animate = function(element) {
   return function() {
@@ -65,10 +66,22 @@ var rotate = function() {
   next.setAttribute("show", "");
   setTimeout(animate(next), 10);
   if (auto) {
-    setTimeout(rotate, interval);
+    auto = setTimeout(rotate, interval);
   }
 }
 rotate();
+
+document.querySelector(".pause-resume").addEventListener("click", function() {
+  if (this.innerHTML == "Pause") {
+    this.innerHTML = "Resume";
+    clearTimeout(auto);
+    auto = false;
+  } else {
+    this.innerHTML = "Pause";
+    auto = true;
+    rotate();
+  }
+});
     </script>
   </body>
 </html>
