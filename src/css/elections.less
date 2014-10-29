@@ -11,6 +11,7 @@
       background: #DDD;
       color: #999;
       text-decoration: none;
+      text-transform: uppercase;
       padding: 4px 8px;
       border-radius: 4px;
       margin-bottom: 3px;
@@ -23,13 +24,15 @@
       }
 
       &.active {
-        background: #EEE;
-        color: #333;
-        font-weight: bold;
+        //background: #EEE;
+        //color: #333;
+        background: @accent;
+        color: white;
       }
 
       &:hover {
-        background: #EEE;
+        background: @accent;
+        color: white;
       }
 
       & + .tab {
@@ -118,7 +121,7 @@
       }
 
       &.NP {
-        background: @np-dark-yellow;
+        background: @np-yellow;
       }
     }
   }
