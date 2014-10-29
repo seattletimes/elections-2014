@@ -21,7 +21,7 @@ define([
       x.open("GET", url);
       x.onerror = fail;
       x.onload = function() {
-        ok(x.response);
+        ok(x.response || x.responseText);
       };
       x.send();
     });
