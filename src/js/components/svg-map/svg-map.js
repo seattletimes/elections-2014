@@ -80,9 +80,12 @@ define([
     this.removeEventListener("mouseleave");
   };
   mapProto.svg = null;
-  mapProto.eachCounty = function(f) {
+  mapProto.unload = function() {
+    this.getState().svg.unload();
+  };
+  mapProto.eachPath = function(selector, f) {
     var state = this.getState();
-    state.svg.queryAll(".county").then(function(selected) {
+    state.svg.queryAll(selector).then(function(selected) {
       selected.forEach(function(element, i) {
         var location = element.getAttribute("data-location");
         f(element, location);

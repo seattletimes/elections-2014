@@ -4,16 +4,20 @@ define([
 
   //Simple, promise-based interaction with SVG documents imported via <object>
 
+  var registerLoad = function(savage) {
+    savage.document = new rsvp.Promise(function(ok) {
+      savage.root.addEventListener("load", function() {
+        ok(savage.root.contentDocument);
+      });
+    });
+  };
+
   var Savage = function(root) {
     if (!(this instanceof Savage)) {
       return new Savage(root);
     }
     this.root = root;
-    this.document = new rsvp.Promise(function(ok, fail) {
-      root.addEventListener("load", function() {
-        ok(root.contentDocument);
-      });
-    });
+    registerLoad(this);
   };
 
   Savage.prototype = {
@@ -26,6 +30,10 @@ define([
       return this.document.then(function(doc) {
         return [].slice.call(doc.querySelectorAll(q));
       });
+    },
+    //notify that this object is becoming invisible, and will need to reload before use
+    unload: function() {
+      registerLoad(this);
     }
   };
 
