@@ -3,13 +3,33 @@
 */
 /* global ich */
 define([
-  "text!./_svg-map.html",
+  "lib/rsvp/rsvp",
   "savage",
   "icanhaz",
   "registerElement",
-  "less!./svg-map.less"
-], function(template, savage) {
-  ich.addTemplate("map", template);
+  "less!./svg-map.less",
+], function(rsvp, savage) {
+
+  var xhrCache = {};
+
+  var xhr = function(url) {
+    if (url in xhrCache) {
+      return xhrCache[url];
+    }
+    var promise = new rsvp.Promise(function(ok, fail) {
+      var x = new XMLHttpRequest();
+      x.open("GET", url);
+      x.onerror = fail;
+      x.onload = function() {
+        ok(x.response);
+      };
+      x.send();
+    });
+    xhrCache[url] = promise;
+    return promise;
+  };
+
+  var qsa = function(el, s) { return Array.prototype.slice.call(el.querySelectorAll(s)) };
 
   var onHover = function(e) {
     var popup = this.querySelector(".popup");
@@ -20,7 +40,9 @@ define([
     var state = this.getState();
     //if no listener, don't do anything
     if (!state.getCountyData) return;
-    state.svg.queryAll(".active").then(function(active) {
+    state.ready.then(function(self) {
+      var svg = self.querySelector("svg");
+      var active = qsa(svg, ".active");
       active.forEach(function(el) { savage.removeClass(el, "active") });
       savage.addClass(e.target, "active");
     });
@@ -35,11 +57,13 @@ define([
     state.lastHover = key;
     var bounds = this.getBoundingClientRect();
     var popupBounds = popup.getBoundingClientRect();
-    popup.style.top = e.clientY + 20 + "px";
-    if (e.clientX + popupBounds.width > bounds.width) {
-      popup.style.left = (e.clientX - popupBounds.width) + "px";
+    var x = e.clientX - bounds.left;
+    var y = e.clientY - bounds.top;
+    popup.style.top = y + 20 + "px";
+    if (x + popupBounds.width > bounds.width) {
+      popup.style.left = (x - popupBounds.width) + "px";
     } else {
-      popup.style.left = e.clientX + "px";
+      popup.style.left = x + "px";
     }
   };
 
@@ -55,37 +79,32 @@ define([
     this.setAttribute("data-instance", id);
     var state = this.getState();
     ich.addTemplate(templateName, this.innerHTML);
+    this.innerHTML = "";
     state.transclude = ich[templateName];
     delete ich[templateName];
-    this.innerHTML = ich.map({
-      src: src
+    var self = this;
+    state.ready = new rsvp.Promise(function(ok) {
+      xhr(src).then(function(response) {
+        self.innerHTML = response + "<div class=popup></div>";
+        ok(self);
+      });
     });
-    state.svg = savage(this.querySelector("object"));
   };
   mapProto.attachedCallback = function() {
     var self = this;
-    var state = this.getState();
-    state.svg.document.then(function(doc) {
-      doc.addEventListener("mousemove", onHover.bind(self));
-    });
+    this.addEventListener("mousemove", onHover);
     this.addEventListener("mouseleave", function() {
       self.querySelector(".popup").removeAttribute("show");
     });
   };
   mapProto.detachedCallback = function() {
-    var state = this.getState();
-    state.svg.document.then(function(doc) {
-      doc.removeEventListener("mousemove");
-    });
+    this.removeEventListener("mousemove");
     this.removeEventListener("mouseleave");
-  };
-  mapProto.svg = null;
-  mapProto.unload = function() {
-    this.getState().svg.unload();
   };
   mapProto.eachPath = function(selector, f) {
     var state = this.getState();
-    state.svg.queryAll(selector).then(function(selected) {
+    state.ready.then(function(self) {
+      var selected = Array.prototype.slice.call(self.querySelectorAll(selector));
       selected.forEach(function(element, i) {
         var location = element.getAttribute("data-location");
         f(element, location);

@@ -7,26 +7,24 @@ require([
 
   var yes = ["yes", "approved", "maintained"];
 
-  var drawMaps = function(maps) {
-    maps.each(function(i, map) {
-      var raceID = map.getAttribute("data-race");
-      var data = window.mapData[raceID];
-      if (Object.keys(data).length) {
-        map.eachPath(".county", function(shape, name) {
-          var result = data[name];
-          if (result.winner.party) {
-            map.savage.addClass(shape, result.winner.party == "D" ? "dem" : "rep");
-          } else {
-            var option = result.winner.candidate.toLowerCase();
-            map.savage.addClass(shape, yes.indexOf(option) > -1 ? "yes" : "no");
-          }
-        });
-        map.getState().getCountyData = function(county) {
-          return data[county];
-        };
-      }
-    });
-  };
+  $("svg-map").each(function(i, map) {
+    var raceID = map.getAttribute("data-race");
+    var data = window.mapData[raceID];
+    if (Object.keys(data).length) {
+      map.eachPath(".county", function(shape, name) {
+        var result = data[name];
+        if (result.winner.party) {
+          map.savage.addClass(shape, result.winner.party == "D" ? "dem" : "rep");
+        } else {
+          var option = result.winner.candidate.toLowerCase();
+          map.savage.addClass(shape, yes.indexOf(option) > -1 ? "yes" : "no");
+        }
+      });
+      map.getState().getCountyData = function(county) {
+        return data[county];
+      };
+    }
+  });
 
   $(document.body).on("click", "a.tab", function(e) {
     e.preventDefault();
@@ -35,9 +33,7 @@ require([
     $(this).addClass("active");
     $("section.category").hide();
     var section = $(href);
-    var maps = section.find("svg-map").each(function() { this.unload() });
     section.show();
-    drawMaps(maps);
     if (window.history && window.history.replaceState) window.history.replaceState(href, "", href);
   });
 
