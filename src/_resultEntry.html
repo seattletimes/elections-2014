@@ -4,6 +4,7 @@ var yes = ["yes", "approved", "maintained"];
 %>
 <div class="result-block">
   <h3><%= race.name %></h3>
+  <% if (race.description) { %><p class="description"><%= race.description %><% } %>
   <ul class="results">
   <% race.results.forEach(function(result, i) { %>
     <li> 
