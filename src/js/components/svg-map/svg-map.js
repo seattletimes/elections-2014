@@ -1,5 +1,15 @@
 /*
-  Creates a custom element for the SVG maps. Not using Angular for one reason or another.
+  Creates a custom element for the SVG maps.
+
+  The custom element exposes a few new properties and methods:
+  - getState() - returns the internal properties, not attached directly to the element to prevent memory leaks
+  - eachPath(selector, f) - calls f for each path matching the selector, passing in the shape and [data-location]
+  - setTemplate(str) - normally set by wrapping the template in the <svg-map>, but can be called separately
+
+  If you want to enable hover behavior, you must:
+  - define the onhover function on the state object, which should return a data object for templating
+  - specify a class that should trigger hover using state.hoverClass
+
 */
 /* global ich */
 define([
