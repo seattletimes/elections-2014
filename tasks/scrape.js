@@ -126,8 +126,8 @@ module.exports = function(grunt) {
         }
       });
 
-      var categories = ["Featured"].concat(Object.keys(categorized).sort());
-      categorized.Featured = { races: featured, grouped: {} };
+      var categories = ["Key Races"].concat(Object.keys(categorized).sort());
+      categorized["Key Races"] = { races: featured, grouped: {} };
 
       grunt.data.election = {
         all: races,

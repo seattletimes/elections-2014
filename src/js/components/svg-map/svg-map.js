@@ -45,7 +45,7 @@ define([
     var popup = this.querySelector(".popup");
     var state = this.getState();
     //if no listener, don't do anything
-    if (!state.onhover || !state.hoverClass) return;
+    if (!state.onhover) return;
     if (e.target.tagName != "path" || e.target.getAttribute("class").indexOf(state.hoverClass) == -1) {
       popup.removeAttribute("show");
       return;
@@ -56,7 +56,7 @@ define([
       active.forEach(function(el) { savage.removeClass(el, "active") });
       savage.addClass(e.target, "active");
     });
-    var key = e.target.getAttribute("data-location");
+    var key = e.target.id;
     popup.setAttribute("show", "");
     if (state.lastHover != key) {
       //we're on a new path, so inject new template output
@@ -116,8 +116,7 @@ define([
     state.ready.then(function(self) {
       var selected = Array.prototype.slice.call(self.querySelectorAll(selector));
       selected.forEach(function(element, i) {
-        var location = element.getAttribute("data-location");
-        f(element, location);
+        f(element);
       });
     });
   };

@@ -25,10 +25,13 @@ var yes = ["yes", "approved", "maintained"];
   </ul>
   <% if (race.map) { %>
   <div class="map-container">
-    <svg-map src="assets/counties.svg" data-race="<%= race.code %>">
-{{#winner}}
-{{candidate}}: {{votes}} ({{percent}}%)
-{{/winner}}
+    <svg-map src="assets/countyMap.svg" data-race="<%= race.code %>">
+{{location}}{{county}}
+<ul>
+{{#results}}
+  <li> {{candidate}} - {{votes}} ({{percent}}%)
+{{/results}}
+</ul>
     </svg-map>
   </div>
   <% } %>

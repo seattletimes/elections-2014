@@ -11,8 +11,10 @@ require([
     var raceID = map.getAttribute("data-race");
     var data = window.mapData[raceID];
     if (Object.keys(data).length) {
-      map.eachPath(".county", function(shape, name) {
-        var result = data[name];
+      map.eachPath(".county", function(shape) {
+        var id = shape.id.replace(/_/g, " ");
+        var result = data[id];
+        if (!result) console.log(id);
         if (result.winner.party) {
           map.savage.addClass(shape, result.winner.party == "D" ? "dem" : "rep");
         } else {
@@ -22,7 +24,10 @@ require([
       });
       var mapState = map.getState();
       mapState.onhover = function(county) {
-        return data[county];
+        county = county.replace(/_/g, " ");
+        var c = data[county];
+        c.county = county;
+        return c || {};
       };
       mapState.hoverClass = "county";
     }

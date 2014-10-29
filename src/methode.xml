@@ -13,7 +13,7 @@
           <name><%- result.candidate %></name>
           <race><%= code %></race>
           <slug><%= result.candidate.toLowerCase().replace(/\s+/g, "-") %></slug>
-          <status><%= result.incumbent ? "INCUMBENT" : "" %></status>
+          <status><%= result.incumbent ? "*" : "" %></status>
           <resource_uri></resource_uri>
           <votes type="integer"><%= result.votes %></votes>
           <order type="integer">0</order>
