@@ -33,13 +33,13 @@ define([
 
   var onHover = function(e) {
     var popup = this.querySelector(".popup");
-    if (e.target.tagName != "path" || e.target.getAttribute("class").indexOf("county") == -1) {
+    var state = this.getState();
+    //if no listener, don't do anything
+    if (!state.onhover || !state.hoverClass) return;
+    if (e.target.tagName != "path" || e.target.getAttribute("class").indexOf(state.hoverClass) == -1) {
       popup.removeAttribute("show");
       return;
     }
-    var state = this.getState();
-    //if no listener, don't do anything
-    if (!state.getCountyData) return;
     state.ready.then(function(self) {
       var svg = self.querySelector("svg");
       var active = qsa(svg, ".active");
@@ -49,9 +49,9 @@ define([
     var key = e.target.getAttribute("data-location");
     popup.setAttribute("show", "");
     if (state.lastHover != key) {
-      //we're on a new county, so inject new template output
-      var data = state.getCountyData(key);
-      popup.innerHTML = state.transclude(data);
+      //we're on a new path, so inject new template output
+      var data = state.onhover(key);
+      popup.innerHTML = data ? state.transclude(data) : "";
       savage.raise(e.target);
     }
     state.lastHover = key;

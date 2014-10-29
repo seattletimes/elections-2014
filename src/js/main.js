@@ -20,9 +20,11 @@ require([
           map.savage.addClass(shape, yes.indexOf(option) > -1 ? "yes" : "no");
         }
       });
-      map.getState().getCountyData = function(county) {
+      var mapState = map.getState();
+      mapState.onhover = function(county) {
         return data[county];
       };
+      mapState.hoverClass = "county";
     }
   });
 
