@@ -36,7 +36,7 @@ require([
 
   $("svg-map.district").each(function(i, map) {
     var districtID = map.getAttribute("data-district");
-    map.eachPath(".legislature", function(shape) {
+    map.eachPath(".district", function(shape) {
       map.savage.addClass(shape, shape.id == districtID ? "district" : "null");
     });
   });

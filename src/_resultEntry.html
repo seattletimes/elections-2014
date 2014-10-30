@@ -14,7 +14,15 @@ var synonyms = {
 };
 %>
 <div class="result-block">
-  <h3><%= race.name %></h3>
+  <h3><%= race.name %><%
+  if (cat == "Congressional") { %>
+    <span class="map-icon">Map
+      <svg-map 
+        class="us district"
+        src="assets/congress.svg"
+        data-district="<%= race.name.replace(/district\s+/i, "") %>"></svg>
+    </span>
+  <% } %></h3>
   <% if (race.description) { %><p class="description"><%= race.description %><% } %>
   <ul class="results">
   <% race.results.forEach(function(result, i) { %>
@@ -22,6 +30,8 @@ var synonyms = {
       <div class="candidate">
         <%= result.candidate %>
         <span class="party"><%= result.party ? " - " + result.party : "" %></span>
+      </div>
+      <div class="votes">
         <span class="numbers"><%= t.formatNumber(result.votes) %></span>
       </div>
       <div class="bar-container">
@@ -37,10 +47,10 @@ var synonyms = {
   <% if (race.map) { %>
   <div class="map-container">
     <svg-map class="county" src="assets/countyMap.svg" data-race="<%= race.code %>">
-{{location}}{{county}}
+<span class="county">{{county}}</span>
 <ul>
 {{#results}}
-  <li> {{candidate}} - {{votes}} ({{percent}}%)
+  <li> {{candidate}} - {{percent}}% ({{votes}})
 {{/results}}
 </ul>
     </svg-map>
