@@ -43,12 +43,14 @@ module.exports = function(grunt) {
             grouped: {}
           };
         }
-        var subcat = row.subcategory;
         if (row.subcategory) {
-          if (!categorized[cat].grouped[subcat]) {
-            categorized[cat].grouped[subcat] = [];
-          }
-          categorized[cat].grouped[subcat].push(row);
+          var subcats = row.subcategory.split(/,\s?/);
+          subcats.forEach(function(subcat) {
+            if (!categorized[cat].grouped[subcat]) {
+              categorized[cat].grouped[subcat] = [];
+            }
+            categorized[cat].grouped[subcat].push(row);
+          });
         } else {
           categorized[cat].races.push(row);
         }
@@ -126,13 +128,12 @@ module.exports = function(grunt) {
         }
       });
 
-      var categories = ["Key Races"].concat(Object.keys(categorized).sort());
       categorized["Key Races"] = { races: featured, grouped: {} };
 
       grunt.data.election = {
         all: races,
         categorized: categorized,
-        categories: categories,
+        categories: ["Key Races", "Congressional", "Judicial", "Legislative", "Local", "Statewide"],
         mapped: mapped
       };
 

@@ -88,11 +88,13 @@ for (var raceID in election.mapped) {
   var race = election.mapped[raceID];
   for (var county in race) {
     var c = race[county];
-    var votes = c.winner.votes + "";
-    for (var i = votes.length - 3; i > 0; i -= 3) {
-      votes = votes.substr(0, i) + "," + votes.substr(i);
-    }
-    c.winner.votes = votes;
+    c.results.forEach(function(result) {
+      var votes = result.votes + "";
+      for (var i = votes.length - 3; i > 0; i -= 3) {
+        votes = votes.substr(0, i) + "," + votes.substr(i);
+      }
+      result.votes = votes;
+    })
   }
 } %>
 window.mapData = <%= JSON.stringify(election.mapped) %>;

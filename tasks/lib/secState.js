@@ -60,7 +60,7 @@ var getResults = function(config, c) {
       party: candidate.party,
       incumbent: candidate.incumbent,
       description: candidate.description,
-      votes: row.Votes,
+      votes: row.Votes * 1,
       percent: Math.round(row.Votes / row.TotalBallotsCastByRace * 1000) / 10,
       source: "Secretary of State",
       location: typeof config.location == "function" ? config.location(row) : config.location
