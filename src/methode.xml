@@ -2,15 +2,16 @@
 //assemble all races in order
 var races = [];
 ["Statewide", "Congressional", "Judicial", "Legislative", "Local"].forEach(function(cat) {
+  var noPrint = function(r) { return !r.notprint };
   var catRaces = [];
   var category = election.categorized[cat];
   var groups = Object.keys(category.grouped);
   if (groups.length) {
     groups.forEach(function(group) {
-      catRaces.push.apply(catRaces, category.grouped[group]);
+      catRaces.push.apply(catRaces, category.grouped[group].filter(noPrint));
     });
   }
-  catRaces.push.apply(catRaces, category.races);
+  catRaces.push.apply(catRaces, category.races.filter(noPrint));
   races.push.apply(races, catRaces);
 });
 

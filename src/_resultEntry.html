@@ -20,7 +20,7 @@ var synonyms = {
       <svg-map 
         class="us district"
         src="assets/congress.svg"
-        data-district="<%= race.name.replace(/district\s+/i, "") %>"></svg>
+        data-district="<%= race.name.replace(/^.*?district\s+/i, "") %>"></svg>
     </span>
   <% } %></h3>
   <% if (race.description) { %><p class="description"><%= race.description %><% } %>

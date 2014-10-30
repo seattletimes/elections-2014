@@ -5,7 +5,7 @@ json.Election2014_Widget.forEach(function(row) {
   if (!panels[row.group]) {
     panels[row.group] = [];
   }
-  panels[row.group].push(row.race);
+  panels[row.group].push(row);
 });
 %>
 <html>
@@ -14,15 +14,18 @@ json.Election2014_Widget.forEach(function(row) {
     <link rel="stylesheet" type="text/css" href="widget.css">
   </head>
   <body>
-    <a class="pause-resume">Pause</a>
     <% for (var group in panels) { var races = panels[group]; %>
     <section class="panel">
       <h1 class="title">
+        <a class="previous transition">&lt;</a>
         <%= group %>
+        <a class="next transition">&gt;</a>
       </h1>
-      <% races.forEach(function(id) { var race = election.all[id]; %>
+      <% races.forEach(function(section) { var race = election.all[section.race]; %>
       <div class="race">
-        <h2><%= race.name %></h2>
+        <h2>
+          <%= section.rename || race.name %>
+        </h2>
 <!--         <% if (race.description) { %>
         <p class="description"><%= race.description %>
         <% } %> -->
@@ -71,16 +74,24 @@ var rotate = function() {
 }
 rotate();
 
-document.querySelector(".pause-resume").addEventListener("click", function() {
-  if (this.innerHTML == "Pause") {
-    this.innerHTML = "Resume";
-    clearTimeout(auto);
-    auto = false;
-  } else {
-    this.innerHTML = "Pause";
-    auto = true;
-    rotate();
-  }
+qsa(".transition").forEach(function(link) {
+  link.addEventListener("click", function() {
+    var direction = this.className.match(/previous/i) ? "previous" : "next";
+    var siblingProp = direction + "ElementSibling";
+    var current = document.querySelector(".panel[show]");
+    var next = current[siblingProp];
+    console.log(siblingProp, next);
+    if (!next || !next.className.match(/panel/)) {
+      next = direction == "previous" ? qsa(".panel").pop() : document.querySelector(".panel");
+    }
+    current.removeAttribute("show");
+    next.setAttribute("show", "");
+    if (auto) {
+      clearTimeout(auto);
+      auto = false;
+    }
+    setTimeout(animate(next));
+  });
 });
     </script>
   </body>

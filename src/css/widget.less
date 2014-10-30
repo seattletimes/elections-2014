@@ -12,10 +12,33 @@ body {
   width: 960px;
 }
 
-.pause-resume {
+h1 {
+  position: relative;
+}
+
+.transition {
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 20px;
+  display: inline-block;
+  color: white;
+  background: lighten(@text-gray, 20%);
+  padding: 0 16px;
+  border-radius: 4px;
   position: absolute;
   top: 0;
-  right: 0;
+
+  &.next {
+    right: 0;
+  }
+
+  &.previous {
+    left: 0;
+  }
+
+  &:hover {
+    background: darken(@text-gray, 20%);
+  }
 }
 
 section.panel {

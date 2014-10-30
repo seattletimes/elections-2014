@@ -128,6 +128,11 @@ module.exports = function(grunt) {
         }
       });
 
+      featured.sort(function(a, b) {
+        if (a.featured == b.featured) return 0;
+        return a.featured + "" < b.featured + "" ? -1 : 1;
+      });
+
       categorized["Key Races"] = { races: featured, grouped: {} };
 
       grunt.data.election = {
