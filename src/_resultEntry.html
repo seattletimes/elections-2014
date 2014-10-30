@@ -1,6 +1,7 @@
 <% 
 var t = grunt.template;
-var yes = ["yes", "approved", "maintained"];
+var yes = ["yes", "approved", "maintained", "levy yes", "proposition 1a"];
+var no = ["no", "rejected", "repealed", "levy no", "proposition 1b"];
 %>
 <div class="result-block">
   <h3><%= race.name %></h3>
@@ -15,7 +16,7 @@ var yes = ["yes", "approved", "maintained"];
       </div>
       <div class="bar-container">
         <div 
-          class="bar <%= result.party %> <%= yes.indexOf(result.candidate.toLowerCase()) > -1 ? "yes" : "" %>" 
+          class="bar <%= result.party %> <%= yes.indexOf(result.candidate.toLowerCase()) > -1 ? "yes" : "" %> <%= no.indexOf(result.candidate.toLowerCase()) > -1 ? "no" : "" %>" 
           style="width: <%= result.percent * .8 %>%">
           <div class="percentage"><%= result.percent %>%</div>
         </div>

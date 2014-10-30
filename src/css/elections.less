@@ -95,7 +95,7 @@
 
     .bar {
       height: 20px;
-      background: @n-fill;
+      background: @np-yellow;
       transition: width 1s ease-in-out .5s;
       position: relative;
 
@@ -107,6 +107,10 @@
 
       &.yes {
         background: @y-fill;
+      }
+
+      &.no {
+        background: @n-fill;
       }
 
       .pending & {
@@ -121,16 +125,8 @@
         background: @d-blue;
       }
 
-      &.I {
+      &.I, &.NA, &.L, &.Centralist, &.Socialist, &.Non-partisan {
         background: @i-gray;
-      }
-
-      &.NA {
-        background: @i-gray;
-      }
-
-      &.NP {
-        background: @np-yellow;
       }
     }
   }
