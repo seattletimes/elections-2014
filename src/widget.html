@@ -23,13 +23,13 @@ json.Election2014_Widget.forEach(function(row) {
       <% races.forEach(function(id) { var race = election.all[id]; %>
       <div class="race">
         <h2><%= race.name %></h2>
-        <% if (race.description) { %>
+<!--         <% if (race.description) { %>
         <p class="description"><%= race.description %>
-        <% } %>
+        <% } %> -->
         <ul class="results">
           <% race.results.forEach(function(result) { %>
           <li> <%= result.candidate %>
-            <% if (result.party) { %> - <%= result.party %><% }%>
+            <% if (result.party) { %> (<%= result.party %>)<% }%>
             <span class="numbers">
               <%= t.formatNumber(result.votes) %> (<%= result.percent %>%)
           <% }) %>

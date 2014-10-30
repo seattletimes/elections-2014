@@ -133,7 +133,7 @@ module.exports = function(grunt) {
       grunt.data.election = {
         all: races,
         categorized: categorized,
-        categories: ["Key Races", "Congressional", "Judicial", "Legislative", "Local", "Statewide"],
+        categories: ["Key Races", "Congressional", "Statewide", "Legislative", "Local", "Judicial"],
         mapped: mapped
       };
 
