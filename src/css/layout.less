@@ -60,6 +60,13 @@ nav.bar {
   }
 }
 
+.ad {
+  text-align: center;
+  & > * {
+    display: inline-block;
+  }
+}
+
 
 div.content {
   max-width: 1024px;
@@ -69,22 +76,6 @@ div.content {
 }
 
 header.hed {
-
-  .ad {
-    padding: 10px 0;
-    margin: 10px 0;
-    border-width: 1px 0;
-    border-color: @gray;
-    border-style: solid;
-
-    .fake.ad {
-      width: 700px;
-      height: 90px;
-      background: gray;
-      margin: auto;
-    }
-
-  }
 
   .section-fronts {
     font-size: 18px;
@@ -130,6 +121,12 @@ header.hed {
 .rail {
   width: @ad-size;
   float: left;
+
+  #adright {
+    & > a, & > div, & > img {
+      display: block;
+    }
+  }
 
   @media @tablet {
     display: none;

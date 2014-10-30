@@ -37,7 +37,7 @@ if (hours < 13) {
 
       <header class="hed">
         <div class="ad">
-          <div class="fake ad"></div>
+          <%= t.include("partials/_adTop.html") %>
         </div>
         <h1>2014 election results for Washington state</h1>
         <p class="dateline">Published <%= month %> <%= day %>, 2014 at <%= time %>
@@ -92,7 +92,7 @@ if (hours < 13) {
       </main>
 
       <aside class="rail">
-        <div class="fake ad"></div>
+        <%= t.include("partials/_adRight.html") %>
       </aside>
 
     </div>
@@ -119,7 +119,7 @@ for (var raceID in election.mapped) {
 window.mapData = <%= JSON.stringify(election.mapped) %>;
     </script>
     <script src="app.js"></script>
-    <%= " " || t.include("partials/_adFoot.html") %>
+    <%= t.include("partials/_adFoot.html") %>
     <%= t.include("partials/_workHere.html") %>
   </body>
 </html>
