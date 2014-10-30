@@ -14,7 +14,6 @@
           <race><%= code %></race>
           <slug><%= result.candidate.toLowerCase().replace(/\s+/g, "-") %></slug>
           <status><%= result.incumbent ? "*" : "" %></status>
-          <resource_uri></resource_uri>
           <votes type="integer"><%= result.votes %></votes>
           <order type="integer">0</order>
           <percentage><%= result.percent %></percentage>
@@ -23,6 +22,19 @@
         </object>
         <% }) %>
       </candidates>
+      <% if (race.category == "Local" && race.subcategory) { %>
+      <locations>
+        <locations type="list">
+          <object>
+            <county><%= race.subcategory.replace(/\s+county/i, "") %></county>
+            <city type="null"/>
+            <resource_uri/>
+          </object>
+        </locations>
+      </locations>
+      <% } %>
+      <total_votes><%= race.results.reduce(function(p, n) { return p + n.votes; }, 0) %></total_votes>
+      <% if (race.featured) { %><race_status>featured</race_status><% } %>
     </object>
     <% }) %>
   </objects>
