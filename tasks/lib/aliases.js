@@ -14,6 +14,6 @@ module.exports = {
         candidates[person.name] = person;
       });
     }
-    return candidates[name];
+    return candidates[name] || {};
   }
 };

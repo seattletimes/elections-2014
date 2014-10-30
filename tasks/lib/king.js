@@ -1,3 +1,4 @@
+var alias = require("./aliases");
 var fs = require("fs");
 var request = require("request");
 var project = require("../../project.json");
@@ -34,7 +35,7 @@ var getRaceID = function(title) {
   } else if (title.match(/king.*prosecuting.*attorney/i)) {
     //King County prosecutor
     return "king-prosecutor";
-  } else if (title.match(/monorail/i)) {
+  } else if (title.match(/monorail|citizen petition/i)) {
     //Monorail! Monorail! Monorail!
     return "monorail";
   } else if (title.match(/^seattle municipal court/i)) {
@@ -109,8 +110,14 @@ var parser = {
           //precinct counting lines or other garbage
           return;
         }
+        var name = matches[1];
+        name = alias.antialias(name);
+        if (name.match(/write-in/i)) return;
+        var candidateInfo = alias.getCandidateInfo(name);
         var result = {
-          candidate: matches[1],
+          candidate: candidateInfo.name,
+          party: candidateInfo.party,
+          incumbent: candidateInfo.incumbent,
           votes: matches[2] * 1,
           percent: matches[3] * 1,
           source: "King County",
