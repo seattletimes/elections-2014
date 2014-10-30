@@ -24,8 +24,6 @@
       }
 
       &.active {
-        //background: #EEE;
-        //color: #333;
         background: @accent;
         color: white;
       }
@@ -52,11 +50,11 @@
   }
 
   .map-icon {
-    font-size: 13px;
+    font-size: 12px;
     cursor: pointer;
     color: white;
-    text-transform: lowercase;
-    background: @accent;
+    text-transform: uppercase;
+    background: #999;
     border-radius: 4px;
     padding: 2px 4px;
     font-weight: normal;
@@ -74,6 +72,10 @@
       width: 480px;
       box-shadow: 0 12px 16px rgba(0, 0, 0, .2);
       padding: 8px;
+    }
+
+    &:hover {
+      background: @accent;
     }
 
     &:hover svg-map {
