@@ -34,6 +34,7 @@ var synonyms = {
       <div class="votes">
         <span class="numbers"><%= t.formatNumber(result.votes) %></span>
       </div>
+      <% if (result.percent * 1) { %>
       <div class="bar-container">
         <div 
           class="bar <%= result.party %> <%= synonyms[result.candidate.toLowerCase()] %>" 
@@ -41,6 +42,7 @@ var synonyms = {
           <div class="percentage"><%= result.percent %>%</div>
         </div>
       </div>
+      <% } %>
     </li>
   <% }) %>
   </ul>
