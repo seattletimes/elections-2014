@@ -1,20 +1,4 @@
 <!doctype html>
-<%
-var now = new Date();
-var month = ["October", "November", "December"][now.getMonth() - 9];
-var day = now.getDate();
-var hours = now.getHours();
-var minutes = now.getMinutes() + "";
-if (minutes.length == 1) {
-  minutes = "0" + minutes;
-}
-var time;
-if (hours < 13) {
-  time = hours + ":" + minutes + " am";
-} else {
-  time = hours - 12 + ":" + minutes + " pm";
-}
-%>
 <html>
   <head>
     <title><%= json.project.title %></title>
@@ -41,7 +25,7 @@ if (hours < 13) {
           <%= t.include("partials/_adTop.html") %>
         </div>
         <h1>2014 election results for Washington state</h1>
-        <p class="dateline">Last updated: <%= month %> <%= day %>, 2014 at <%= time %>
+        <p class="dateline">Last updated: <%= election.updated %>
       </header>
       
       <main class="elections">

@@ -22,7 +22,6 @@ require([
       map.eachPath(".county", function(shape) {
         var id = shape.id.replace(/_/g, " ");
         var result = data[id];
-        if (!result) console.log(id);
         if (result.winner.party) {
           map.savage.addClass(shape, result.winner.party == "D" ? "dem" : "rep");
         } else {
