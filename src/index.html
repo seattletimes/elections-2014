@@ -31,6 +31,7 @@ if (hours < 13) {
         <img src="http://seattletimes.com/art/ui/seattletimeslogo_home.svg" class="logo">
       </a>
       <h2 class="section-title">Politics</h2>
+      <a class="share"></a>
     </nav>
 
     <div class="content">
@@ -46,6 +47,9 @@ if (hours < 13) {
       <main class="elections">
         <p class="cutline"> 
           View state and local election results by race and see county-by-county results for key statewide races. Uncontested races are not included. For complete Washington state results, visit the <a href="http://results.vote.wa.gov/results/current/">Washington Secretary of State</a>.
+
+
+
         <nav class="tab-container">
           <% election.categories.forEach(function(cat) { %>
           <a class="tab" href="#<%= cat.replace(/\s/g, "") %>"><%= cat %></a>
@@ -88,6 +92,11 @@ if (hours < 13) {
             %>
             </section>
           <% }); %>
+          <ul class="key">
+            <li> * indicates incumbent
+            <li> # indicates measure must meet specific minimum turnout and 60% yes-vote requirements
+            <li> Races that cross county borders include vote totals from all jurisdictions.
+          </li>
         </article>
       </main>
 

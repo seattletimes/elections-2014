@@ -1,9 +1,16 @@
 /* global $ */
 
 require([
+  "share",
   "components/svg-map/svg-map",
   "jquery"
-], function() {
+], function(Share) {
+
+  new Share(".share", {
+    ui: {
+      flyout: "bottom left"
+    }
+  });
 
   var yes = ["yes", "approved", "maintained"];
 

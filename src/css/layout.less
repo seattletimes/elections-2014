@@ -28,7 +28,7 @@ nav.bar {
   z-index: 99999;
 
   @media @mobile {
-    text-align: center;
+    position: relative;
   }
 
   a {
@@ -58,12 +58,30 @@ nav.bar {
       display: none;
     }
   }
+
+  .share {
+    position: absolute;
+    right: 0;
+    bottom: 16px;
+  }
 }
 
 .ad {
   text-align: center;
-  & > * {
-    display: inline-block;
+  display: block;
+
+  #adtopright {
+    white-space: nowrap;
+    & > img, & > div, & > a {
+      display: inline-block;
+    }
+    div {
+      float: none !important; //stupid ad code
+    }
+  }
+
+  @media @mobile {
+    display: none;
   }
 }
 
@@ -73,6 +91,10 @@ div.content {
   margin: 50px auto 0;
   overflow: auto;
   padding: 0 16px;
+
+  @media @mobile {
+    margin: 0 auto;
+  }
 }
 
 header.hed {
@@ -89,6 +111,7 @@ header.hed {
     margin: 0;
     font-family: @hed;
     font-size: 40px;
+    display: block;
   }
 
   .dateline {
@@ -131,6 +154,13 @@ header.hed {
   @media @tablet {
     display: none;
   }
+}
+
+.key {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
 }
 
 footer.bottom {
