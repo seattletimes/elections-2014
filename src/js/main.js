@@ -53,6 +53,15 @@ require([
     $("a.tab:first").click();
   }
 
+  $("select.subnav").on("change", function() {
+    var val = this.value;
+    var section = $(this).closest(".category");
+    section.find(".subcategory").hide();
+    var selector = '[data-subcat="' + val + '"]';
+    console.log(selector, section.find(selector));
+    section.find(selector).show();
+  }).trigger("change");
+
   document.body.className = "";
 
 });
