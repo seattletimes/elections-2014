@@ -1,16 +1,24 @@
 var fs = require("fs");
 
 var candidates = {};
-var sheet;
+var cSheet;
+var aSheet;
+var aliases = {};
 
 module.exports = {
   antialias: function(name) {
-    return name;
+    if (!aSheet) {
+      aSheet = JSON.parse(fs.readFileSync("./json/Election2014_Aliases.json", { encoding: "utf8"}));
+      aSheet.forEach(function(row) {
+        aliases[row.alias] = row.name;
+      });
+    }
+    return aliases[name] || name;
   },
   getCandidateInfo: function(name) {
-    if (!sheet) {
-      sheet = JSON.parse(fs.readFileSync("./json/Election2014_Candidates.json", { encoding: "utf8" }));
-      sheet.forEach(function(person) {
+    if (!cSheet) {
+      cSheet = JSON.parse(fs.readFileSync("./json/Election2014_Candidates.json", { encoding: "utf8" }));
+      cSheet.forEach(function(person) {
         candidates[person.name] = person;
       });
     }

@@ -29,8 +29,8 @@ var rename = ["Judicial", "Legislative", "Congressional"];
         <% race.results.forEach(function(result) { %>
         <object>
           <name><%- result.candidate %></name>
-          <race><%= race.race %></race>
-          <slug><%= result.candidate.toLowerCase().replace(/\s+/g, "-") %></slug>
+          <race><%= result.race %></race>
+          <slug/>
           <status><%= result.incumbent ? "*" : "" %></status>
           <votes type="integer"><%= result.votes %></votes>
           <order type="integer">0</order>

@@ -67,7 +67,7 @@ module.exports = function(grunt) {
       //add King county results
       king.forEach(function(entry) {
         var exists = races[entry.race];
-        if (!exists) return console.log("Not including King race:", entry.race);
+        if (!exists || exists.sosraceid) return console.log("Not including King race:", entry.race);
         races[entry.race].results = entry.results;
       });
 
@@ -134,12 +134,28 @@ module.exports = function(grunt) {
       });
 
       categorized["Key Races"] = { races: featured, grouped: {} };
+      
+      var now = new Date();
+      var month = ["October", "November", "December"][now.getMonth() - 9];
+      var day = now.getDate();
+      var hours = now.getHours();
+      var minutes = now.getMinutes() + "";
+      if (minutes.length == 1) {
+        minutes = "0" + minutes;
+      }
+      var time;
+      if (hours < 13) {
+        time = hours + ":" + minutes + " am";
+      } else {
+        time = hours - 12 + ":" + minutes + " pm";
+      }
 
       grunt.data.election = {
         all: races,
         categorized: categorized,
         categories: ["Key Races", "Congressional", "Statewide", "Legislative", "Local", "Judicial"],
-        mapped: mapped
+        mapped: mapped,
+        updated: month + " " + day + ", 2014 at " + time
       };
 
       c();

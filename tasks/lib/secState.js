@@ -59,7 +59,6 @@ var getResults = function(config, c) {
       candidate: name,
       party: candidate.party,
       incumbent: candidate.incumbent,
-      description: candidate.description,
       votes: row.Votes * 1,
       percent: Math.round(row.Votes / row.TotalBallotsCastByRace * 1000) / 10,
       source: "Secretary of State",
