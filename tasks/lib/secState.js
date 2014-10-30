@@ -76,7 +76,13 @@ var getResults = function(config, c) {
     }
     c(null, rows);
   });
-  request(config.url).pipe(parser);
+  if (!fs.existsSync("temp")) {
+    fs.mkdirSync("temp");
+  }
+  var temp = fs.createWriteStream("temp/" + config.cache.replace("json", "txt"));
+  var r = request(config.url);
+  r.pipe(parser);
+  r.pipe(temp);
 };
 
 module.exports = {

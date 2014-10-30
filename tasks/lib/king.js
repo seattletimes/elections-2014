@@ -174,6 +174,7 @@ var getData = function(c) {
       if (!fs.existsSync("./temp")) {
         fs.mkdirSync("./temp");
       }
+      fs.writeFileSync(cache.replace("json", "txt"), body);
       fs.writeFileSync(cache, JSON.stringify(result, null, 2));
     }
     c(null, result);
