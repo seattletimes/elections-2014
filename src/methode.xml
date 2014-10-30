@@ -1,17 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<%
+//assemble all races in order
+var races = [];
+["Statewide", "Congressional", "Judicial", "Legislative", "Local"].forEach(function(cat) {
+  var catRaces = [];
+  var category = election.categorized[cat];
+  var groups = Object.keys(category.grouped);
+  if (groups.length) {
+    groups.forEach(function(group) {
+      catRaces.push.apply(catRaces, category.grouped[group]);
+    });
+  }
+  catRaces.push.apply(catRaces, category.races);
+  races.push.apply(races, catRaces);
+});
+
+var rename = ["Judicial", "Legislative", "Congressional"];
+%><?xml version="1.0" encoding="UTF-8"?>
 <response>
   <objects type="list">
-    <% Object.keys(election.all).forEach(function(code, i) { var race = election.all[code]; %>
+    <% races.forEach(function(race, i) { %>
     <object>
-      <name><%- race.name %></name>
-      <race_position type="integer"><%= i %></race_position>
-      <slug><%= code %></slug>
+      <name><%= rename.indexOf(race.category) > -1 ? race.subcategory + " " : "" %><%- race.name %></name>
+      <race_position type="integer">i</race_position>
+      <slug><%= race.race %></slug>
       <other_location><% race.location %></other_location>
       <candidates type="list">
         <% race.results.forEach(function(result) { %>
         <object>
           <name><%- result.candidate %></name>
-          <race><%= code %></race>
+          <race><%= race.race %></race>
           <slug><%= result.candidate.toLowerCase().replace(/\s+/g, "-") %></slug>
           <status><%= result.incumbent ? "*" : "" %></status>
           <votes type="integer"><%= result.votes %></votes>
@@ -22,17 +39,15 @@
         </object>
         <% }) %>
       </candidates>
-      <% if (race.category == "Local" && race.subcategory) { %>
       <locations>
         <locations type="list">
           <object>
-            <county><%= race.subcategory.replace(/\s+county/i, "") %></county>
+            <county><%= race.category == "Local" ? race.subcategory.replace(/\s+count(y|ies)/i, "") : "" %></county>
             <city type="null"/>
             <resource_uri/>
           </object>
         </locations>
       </locations>
-      <% } %>
       <total_votes><%= race.results.reduce(function(p, n) { return p + n.votes; }, 0) %></total_votes>
       <% if (race.featured) { %><race_status>featured</race_status><% } %>
     </object>

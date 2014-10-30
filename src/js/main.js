@@ -7,7 +7,8 @@ require([
 
   var yes = ["yes", "approved", "maintained"];
 
-  $("svg-map").each(function(i, map) {
+  //enable county maps
+  $("svg-map.county").each(function(i, map) {
     var raceID = map.getAttribute("data-race");
     var data = window.mapData[raceID];
     if (Object.keys(data).length) {
@@ -31,6 +32,13 @@ require([
       };
       mapState.hoverClass = "county";
     }
+  });
+
+  $("svg-map.district").each(function(i, map) {
+    var districtID = map.getAttribute("data-district");
+    map.eachPath(".legislature", function(shape) {
+      map.savage.addClass(shape, shape.id == districtID ? "district" : "null");
+    });
   });
 
   $(document.body).on("click", "a.tab", function(e) {

@@ -66,7 +66,15 @@ if (hours < 13) {
               }
               groups.forEach(function(group) { %>
               <div class="subcategory" data-subcat="<%= group %>">
-                <h2><%= group %></h2><%
+                <h2><%= group %><%
+                if (cat == "Legislative") { %>
+                  <span class="map-icon">Map
+                    <svg-map 
+                      class="state district"
+                      src="assets/legislature-districts.svg"
+                      data-district="<%= group.replace(/district\s+/i, "") %>"></svg>
+                  </span>
+                <% } %></h2><%
                 category.grouped[group].forEach(function(race) {
                   print(t.include("_resultEntry.html", { race: race }));
                 });%>
