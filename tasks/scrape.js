@@ -7,12 +7,33 @@ Relies on adapters in tasks/lib for specific sites.
 
 var async = require("async");
 
+var getDateline = function() {
+  //find the current dateline
+  var now = new Date();
+  var month = ["October", "November", "December"][now.getMonth() - 9];
+  var day = now.getDate();
+  var hours = now.getHours();
+  var minutes = now.getMinutes() + "";
+  if (minutes.length == 1) {
+    minutes = "0" + minutes;
+  }
+  var time;
+  if (hours < 13) {
+    time = hours + ":" + minutes + " am";
+  } else {
+    time = hours - 12 + ":" + minutes + " pm";
+  }
+  return month + " " + day + ", 2014 at " + time
+}
+
 module.exports = function(grunt) {
 
   //call various adapters to get resources
   var secState = require("./lib/secState");
   var kingCounty = require("./lib/king");
   var turnout = require("./lib/turnout");
+  var processCounties = require("./lib/processCounties");
+  var overrides = require("./lib/overrides");
 
   grunt.registerTask("scrape", "Pull data from election result endpoints", function() {
 
@@ -59,6 +80,14 @@ module.exports = function(grunt) {
         }
       });
 
+      //sort and add Key Races as a category
+      featured.sort(function(a, b) {
+        if (a.featured == b.featured) return 0;
+        return a.featured + "" < b.featured + "" ? -1 : 1;
+      });
+      categorized["Key Races"] = { races: featured, grouped: {} };
+
+      //add results to races
       statewide.forEach(function(result) {
         var race = races[result.race];
         race.results.push(result);
@@ -67,96 +96,24 @@ module.exports = function(grunt) {
       //add King county results
       king.forEach(function(entry) {
         var exists = races[entry.race];
-        if (!exists || exists.sosraceid) return console.log("Not including King race:", entry.race);
+        if (!exists || exists.sosraceid) return console.log("Ignoring King:", entry.race);
         races[entry.race].results = entry.results;
       });
 
-      //aggregate county results
-      var aggregated = {};
-      counties.forEach(function(county) {
-        var race = races[county.race];
-        //do we have statewide results for this?
-        if (race.results.length) return;
-        //if not, create temporary aggregation info
-        if (!aggregated[county.race]) aggregated[county.race] = race;
-        if (!race.aggregate) race.aggregate = {};
-        if (!race.aggregate[county.candidate]) race.aggregate[county.candidate] = [];
-        //add the race to the aggregation
-        race.aggregate[county.candidate].push(county);
-      });
-      Object.keys(aggregated).forEach(function(county) {
-        var total = 0;
-        county = aggregated[county];
-        for (var candidate in county.aggregate) {
-          var list = county.aggregate[candidate];
-          var result = {};
-          //object.create doesn't work for JSON, so manually copy
-          for (var key in list[0]) result[key] = list[0][key];
-          result.location = "Aggregated";
-          result.votes = list.reduce(function(prev, now) { return prev + now.votes }, 0);
-          county.results.push(result);
-          total += result.votes;
-        }
-        //figure percentages
-        county.results.forEach(function(result) {
-          result.percent = Math.round(result.votes / total * 1000) / 10;
-        });
-        delete county.aggregate;
-      });
+      //add county data to races via reference
+      var countyData = processCounties(counties, races, raceConfig);
 
-      //add county data to mappable races
-      var mapped = {};
-      raceConfig.forEach(function(config) {
-        if (config.map) {
-          var countyMap = {};
-          counties.forEach(function(result) {
-            if (result.race == config.code) {
-              if (!countyMap[result.location]) {
-                countyMap[result.location] = {
-                  winner: result,
-                  results: []
-                };
-              }
-              var county = countyMap[result.location];
-              county.results.push(result);
-              if (county.winner.votes < result.votes) {
-                county.winner = result;
-              }
-            }
-          });
-          races[config.code].map = mapped[config.code] = countyMap;
-        }
-      });
-
-      featured.sort(function(a, b) {
-        if (a.featured == b.featured) return 0;
-        return a.featured + "" < b.featured + "" ? -1 : 1;
-      });
-
-      categorized["Key Races"] = { races: featured, grouped: {} };
-      
-      var now = new Date();
-      var month = ["October", "November", "December"][now.getMonth() - 9];
-      var day = now.getDate();
-      var hours = now.getHours();
-      var minutes = now.getMinutes() + "";
-      if (minutes.length == 1) {
-        minutes = "0" + minutes;
-      }
-      var time;
-      if (hours < 13) {
-        time = hours + ":" + minutes + " am";
-      } else {
-        time = hours - 12 + ":" + minutes + " pm";
-      }
+      //override results, if necessary
+      var overrideSheet = grunt.file.readJSON("json/Election2014_Overrides.json");
+      overrides.process(overrideSheet, races);
 
       grunt.data.election = {
         all: races,
         categorized: categorized,
         categories: ["Key Races", "Congressional", "Statewide", "Legislative", "Local", "Judicial"],
-        mapped: mapped,
+        mapped: countyData.mapped,
         turnout: turnout,
-        updated: month + " " + day + ", 2014 at " + time
+        updated: getDateline()
       };
 
       c();
