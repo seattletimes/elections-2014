@@ -5,11 +5,12 @@ exports.process = function(sheet, races) {
   var overrides = {};
   sheet.forEach(function(row) {
     var candidate = alias.getCandidateInfo(row.name);
+    var race = row.race || row.sosraceid;
     if (!overrides[row.race]) {
-      overrides[row.race] = [];
+      overrides[race] = [];
     }
-    overrides[row.race].push({
-      race: row.race,
+    overrides[race].push({
+      race: race,
       candidate: row.name,
       party: candidate.party,
       incumbent: candidate.incumbent,
