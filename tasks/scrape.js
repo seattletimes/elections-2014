@@ -7,8 +7,6 @@ Relies on adapters in tasks/lib for specific sites.
 
 var async = require("async");
 
-var debug = true;
-
 module.exports = function(grunt) {
 
   //call various adapters to get resources

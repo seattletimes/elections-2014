@@ -127,6 +127,9 @@ header.hed {
 @ad-size: 300px;
 
 .elections {
+  width: calc(~"100% - " @ad-size + 25px);
+  margin: 0 24px 24px 0;
+  float: left;
 
   .cutline {
     font-family: @serif;
@@ -135,9 +138,6 @@ header.hed {
     margin-top: 0;
   }
 
-  width: calc(~"100% - " @ad-size + 25px);
-  margin: 0 24px 24px 0;
-  float: left;
 
   @media @tablet {
     width: 100%;
