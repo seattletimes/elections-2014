@@ -58,9 +58,14 @@
                 if (cat == "Legislative") { %>
                   <span class="map-icon">Map
                     <svg-map 
-                      class="state district"
+                      class="state district" <% 
+                      var district = group.replace(/district\s+/i, "") * 1;
+                      if ([1,11,21,23,25,26,27,28,29,30,32,33,34,36,37,38,41,43,44,45,46,47,48].indexOf(district) > -1) { %>
+                      src="assets/zoomed.svg"
+                      <% } else { %>
                       src="assets/legislativedists.svg"
-                      data-district="<%= group.replace(/district\s+/i, "") %>"></svg>
+                      <% } %>
+                      data-district="<%= district %>"></svg>
                   </span>
                 <% } %></h2><%
                 category.grouped[group].forEach(function(race) {
