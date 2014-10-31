@@ -25,8 +25,8 @@
           <%= t.include("partials/_adTop.html") %>
         </div>
         <h1>2014 election results for Washington state</h1>
-        <p class="dateline">Last updated: <%= election.updated %> - 
-          Current turnout: <%= election.turnout.Total.VoterTurnoutPercentage %> of 65% expected
+        <p class="dateline">Last updated: <%= election.updated %> with
+          <%= election.turnout.percentage %>% of expected ballots counted statewide
       </header>
       
       <main class="elections">
