@@ -31,7 +31,9 @@ json.Election2014_Widget.forEach(function(row) {
         <% } %> -->
         <ul class="results">
           <% race.results.forEach(function(result) { %>
-          <li> <b><%= result.candidate %>
+          <li> 
+            <% if (race.called && race.called == result.candidate) { %> &#10004; <% } %>
+            <b><%= result.candidate %>
             <% if (result.party) { %> (<%= result.party %>)<% }%></b>
             <span class="numbers">
               <%= t.formatNumber(result.votes) %> (<%= result.percent %>%)

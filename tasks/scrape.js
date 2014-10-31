@@ -14,6 +14,7 @@ module.exports = function(grunt) {
   //call various adapters to get resources
   var secState = require("./lib/secState");
   var kingCounty = require("./lib/king");
+  var turnout = require("./lib/turnout");
 
   grunt.registerTask("scrape", "Pull data from election result endpoints", function() {
 
@@ -22,11 +23,12 @@ module.exports = function(grunt) {
 
     var c = this.async();
 
-    async.parallel([secState.statewide, secState.counties, kingCounty], function(err, results) {
+    async.parallel([secState.statewide, secState.counties, kingCounty, turnout], function(err, results) {
 
       var statewide = results[0];
       var counties = results[1];
       var king = results[2];
+      var turnout = results[3];
 
       //attach results to races
       var raceConfig = grunt.file.readJSON("json/Election2014_Races.json").filter(function(d) { return !d.uncontested });
@@ -155,6 +157,7 @@ module.exports = function(grunt) {
         categorized: categorized,
         categories: ["Key Races", "Congressional", "Statewide", "Legislative", "Local", "Judicial"],
         mapped: mapped,
+        turnout: turnout,
         updated: month + " " + day + ", 2014 at " + time
       };
 
