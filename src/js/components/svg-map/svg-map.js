@@ -96,6 +96,7 @@ define([
     state.ready = new rsvp.Promise(function(ok) {
       xhr(src).then(function(response) {
         self.innerHTML = response + "<div class=popup></div>";
+        self.setAttribute("ready", "");
         ok(self);
       });
     });

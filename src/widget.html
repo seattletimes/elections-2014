@@ -85,7 +85,6 @@ qsa(".transition").forEach(function(link) {
     var siblingProp = direction + "ElementSibling";
     var current = document.querySelector(".panel[show]");
     var next = current[siblingProp];
-    console.log(siblingProp, next);
     if (!next || !next.className.match(/panel/)) {
       next = direction == "previous" ? qsa(".panel").pop() : document.querySelector(".panel");
     }

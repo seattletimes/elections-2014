@@ -15,6 +15,18 @@ a:hover, a:focus {
   color: #3461A1;
 }
 
+//equivalent of ng-cloak
+svg-map {
+  display: none;
+  &[ready] {
+    display: block;
+  }
+}
+
+svg {
+  display: block;
+}
+
 nav.bar {
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, .3);
