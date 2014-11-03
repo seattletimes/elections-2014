@@ -55,10 +55,14 @@ require([
     $("section.category").hide();
     var section = $(href);
     section.show();
-    if (window.history && window.history.replaceState) window.history.replaceState(href, "", href);
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(href, "", href);
+    } else {
+      window.location.hash = href.replace("#", "section-");
+    }
   });
 
-  var hash = window.location.hash;
+  var hash = window.location.hash.replace("section-", "");
   if (hash) {
     //restore place from the URL hash
     var selector = "a.tab[href=%]".replace("%", hash);
