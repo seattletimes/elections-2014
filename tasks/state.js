@@ -10,7 +10,7 @@ we'll use those to automatically initialize.
 module.exports = function(grunt) {
 
   grunt.registerTask("state", "Initializes the shared state object", function() {
-    grunt.data = {};
+    grunt.data = grunt.data || {};
   });
 
 };
