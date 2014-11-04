@@ -49,6 +49,7 @@ var getRaceID = function(title) {
     //Si View parks
     return "si-view-prop-1";
   }
+  //console.log("[king] Ignoring race:", title.substr(0, 40) + "...");
   return "redundant";
 };
 

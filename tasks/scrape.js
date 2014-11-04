@@ -23,8 +23,8 @@ var getDateline = function() {
   } else {
     time = hours - 12 + ":" + minutes + " pm";
   }
-  return month + " " + day + ", 2014 at " + time
-}
+  return month + " " + day + ", 2014 at " + time;
+};
 
 module.exports = function(grunt) {
 
@@ -50,7 +50,15 @@ module.exports = function(grunt) {
       var turnout = results[3];
 
       //attach results to races
-      var raceConfig = grunt.file.readJSON("json/Election2014_Races.json").filter(function(d) { return !d.uncontested });
+      var uncontested = [];
+      var raceConfig = grunt.file.readJSON("json/Election2014_Races.json").filter(function(d) {
+        if (d.uncontested) {
+          //console.log("[scrape] Uncontested race: ", d.name);
+          uncontested.push(d.code || d.sosraceid);
+          return false;
+        }
+        return true;
+      });
       var races = {};
       var categorized = {};
       var featured = [];
@@ -96,7 +104,11 @@ module.exports = function(grunt) {
       //add King county results
       king.forEach(function(entry) {
         var exists = races[entry.race];
-        if (!exists || exists.sosraceid) return console.log("Ignoring King:", entry.race);
+        if (!exists) {
+          if (uncontested.indexOf(entry.race) == -1) console.log("[scrape] No race config:", entry.race);
+          return;
+        }
+        if (exists.sosraceid) return console.log("[scrape] Duplicate race:", entry.race)
         races[entry.race].results = entry.results;
       });
 
