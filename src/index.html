@@ -48,7 +48,7 @@
             if (groups.length) {
               if (cat == "Local") { %>
               <p class="subnav-controls">Select a location: <select class="subnav">
-                <% groups.forEach(function(group) { %>
+                <% groups.sort().forEach(function(group) { %>
                 <option value="<%= group %>"><%= group %></option>
                 <% }); %>
               </select></p> <%
