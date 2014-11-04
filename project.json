@@ -5,8 +5,8 @@
       "path": "extra-haymaking"
     },
     "live": {
-      "bucket": "",
-      "path": ""
+      "bucket": "projects.seattletimes.com",
+      "path": "2014/election"
     }
   },
   "title": "2014 election results for Washington state",
