@@ -42,13 +42,13 @@ module.exports = function(counties, races, raceConfig) {
         if (result.race == config.code) {
           if (!countyMap[result.location]) {
             countyMap[result.location] = {
-              winner: result,
+              winner: null,
               results: []
             };
           }
           var county = countyMap[result.location];
           county.results.push(result);
-          if (county.winner.votes < result.votes) {
+          if (result.votes > 0 && (!county.winner || county.winner.votes < result.votes)) {
             county.winner = result;
           }
         }
