@@ -7,6 +7,16 @@ json.Election2014_Widget.forEach(function(row) {
   }
   panels[row.group].push(row);
 });
+var now = new Date();
+var hours = now.getHours();
+var suffix = " AM";
+if (hours > 12) {
+  hours = hours - 12;
+  suffix = " PM";
+}
+var minutes = now.getMinutes();
+if (minutes < 10) minutes = "0" + minutes;
+var timestamp = hours + ":" + minutes + suffix;
 %>
 <html>
   <head>
@@ -45,7 +55,7 @@ json.Election2014_Widget.forEach(function(row) {
     <% } %>
     <div class="footnote">
       <a class="full" href="<%= json.project.url %>">See full results &rarr;</a>
-      <span class="updated">Last updated: <%= election.updated %></span>
+      <span class="updated">Last updated: <%= timestamp %></span>
     <script src="assets/pym.js"></script>
     <script>
 var child = new pym.Child({ polling: 300 });
