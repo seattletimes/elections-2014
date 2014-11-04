@@ -104,8 +104,10 @@ module.exports = function(grunt) {
       var countyData = processCounties(counties, races, raceConfig);
 
       //override results, if necessary
-      var overrideSheet = grunt.file.readJSON("json/Election2014_Overrides.json");
-      overrides.process(overrideSheet, races);
+      if (grunt.file.exists("json/Election2014_Overrides.json")) {
+        var overrideSheet = grunt.file.readJSON("json/Election2014_Overrides.json");
+        overrides.process(overrideSheet, races);
+      }
 
       grunt.data.election = {
         all: races,
