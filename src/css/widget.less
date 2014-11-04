@@ -9,7 +9,10 @@
 
 body {
   font-family: @sans;
-  width: 960px;
+  max-width: 960px;
+  border-bottom: 1px solid #DDD;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 h1 {
@@ -83,15 +86,16 @@ section.panel {
     border-left: 1px solid @gray;
 
     h2 {
-      margin: 0 0 5px 0;
+      margin: 0;
       font-weight: normal;
-      font-size: 16px;
+      font-size: 15px;
     }
 
     .description {
-      color: @text-gray;
-      font-size: 13px;
-      margin: 0;
+      //color: @text-gray;
+      font-size: 12px;
+      font-style: italic;
+      margin: 0 0 6px 0;
     }
 
     &:first-of-type {
@@ -104,8 +108,13 @@ section.panel {
       list-style-type: none;
 
       li {
-        //border-bottom: 1px dotted @gray;
         position: relative;
+        font-size: 14px;
+
+        .checkmark {
+          color: green;
+          padding-left: 3px;
+        }
 
         .numbers {
           position: absolute;
@@ -118,11 +127,16 @@ section.panel {
   }
 }
 
+.footnote {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
 .full {
   float: right;
   background: @st-orange;
   padding: 4px 6px;
-  font-size: 14px;
+  font-size: 13px;
   text-transform: uppercase;
   text-decoration: none;
   color: white;
