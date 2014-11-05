@@ -46,7 +46,7 @@ var timestamp = hours + ":" + minutes + suffix;
             <% if (result.party) { %> (<%= result.party %>)<% }%>
             <% if (race.called && race.called == result.candidate) { %> <span class="checkmark">&#10004;</span> <% } %>
             <span class="numbers">
-              <%= t.formatNumber(result.votes) %> (<%= result.percent %>%)
+              <%= t.formatNumber(result.votes) %> (<%= result.percent || "0" %>%)
           <% }) %>
         </ul>
       </div>
