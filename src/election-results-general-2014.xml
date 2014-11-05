@@ -21,7 +21,7 @@ var rename = ["Judicial", "Legislative", "Congressional"];
   <objects type="list">
     <% races.forEach(function(race, i) { %>
     <object>
-      <name><%= rename.indexOf(race.category) > -1 ? race.subcategory + " " : "" %><%- race.name.replace(/\*\*/g, "#") %></name>
+      <name><%= rename.indexOf(race.category) > -1 ? race.subcategory + " " : "" %><%- race.name.replace(/\*\*/g, " #") %></name>
       <race_position type="integer">i</race_position>
       <slug><%= race.race %></slug>
       <other_location><% race.location %></other_location>
