@@ -120,7 +120,7 @@ var parser = {
           party: candidateInfo.party,
           incumbent: candidateInfo.incumbent,
           votes: matches[2] * 1,
-          percent: matches[3] * 1,
+          percent: Math.round(matches[3] * 10) / 10,
           source: "King County",
           location: "King"
         };
