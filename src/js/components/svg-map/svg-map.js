@@ -104,12 +104,14 @@ define([
   mapProto.attachedCallback = function() {
     var self = this;
     this.addEventListener("mousemove", onHover);
+    this.addEventListener("touchstart", onHover);
     this.addEventListener("mouseleave", function() {
       self.querySelector(".popup").removeAttribute("show");
     });
   };
   mapProto.detachedCallback = function() {
     this.removeEventListener("mousemove");
+    this.removeEventListener("touchstart");
     this.removeEventListener("mouseleave");
   };
   mapProto.eachPath = function(selector, f) {
