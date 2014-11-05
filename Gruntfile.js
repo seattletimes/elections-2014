@@ -9,5 +9,5 @@ module.exports = function(grunt) {
   grunt.registerTask("static", ["copy", "amd", "less", "template"]);
   grunt.registerTask("default", ["static", "connect:dev", "watch"]);
   grunt.registerTask("poll", ["state", "json", "scrape"]);
-  grunt.registerTask("update", ["poll", "static", "publish:live"]);
+  grunt.registerTask("update", ["sheets", "poll", "static", "publish:live"]);
 };
