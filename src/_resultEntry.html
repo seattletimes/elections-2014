@@ -22,7 +22,11 @@ var synonyms = {
         src="assets/congress.svg"
         data-district="<%= race.name.replace(/^.*?district\s+/i, "") %>"></svg>
     </span>
-  <% } %></h3>
+  <% } %>
+  <% if (race.url) { %>
+    <span class="related-story"><a href="<%= race.url %>"><i class="fa fa-external-link-square"></i> Read story</a></span>
+  <% } %>
+  </h3>
   <% if (race.description) { %><p class="description"><%= race.description %><% } %>
   <ul class="results">
   <% race.results.forEach(function(result, i) { %>
