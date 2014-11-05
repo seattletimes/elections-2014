@@ -15,5 +15,5 @@
   "slug": "election2014",
   "tags": ["politics", "election", "local"],
   "sheets": ["1WlhB85_Cc1V1amRPkh4fnls5AyjCoteGfJ0B7Rlzd4E"],
-  "caching": true
+  "caching": false
 }
