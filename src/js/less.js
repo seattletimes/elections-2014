@@ -17,7 +17,7 @@ define(function() {
   };
 
   var lessTemplate = function() {/*
-define("less!{{file}}", function() {
+define("{{plugin}}!{{module}}", function() {
   var style = document.createElement("style");
   style.setAttribute("less", "{{file}}");
   style.innerHTML = {{content}};
@@ -29,17 +29,15 @@ define("less!{{file}}", function() {
 
   return {
     load: function(name, req, onLoad, config) {
-      var file = fs.readFileSync(path.join(config.baseUrl, name), { encoding: "utf8" });
-      less.render(file, function(err, css) {
-        cache[name] = css;
-        onLoad(css);
-      });
+      //nothing to do here
+      onLoad();
     },
     write: function(plugin, name, write) {
       var template = _(lessTemplate);
-      var css = cache[name];
+      var css = fs.readFileSync(path.resolve("temp/js", name), { encoding: "utf8" });
       var output = template
-        .replace(/\{\{file\}\}/g, name)
+        .replace("{{module}}", name)
+        .replace("{{plugin}}", plugin)
         .replace("{{content}}", JSON.stringify(css));
       write(output);
     }

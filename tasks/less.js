@@ -8,6 +8,7 @@ module.exports = function(grunt) {
 
   var async = require("async");
   var less = require("less");
+  var path = require("path");
   
   var options = {
     paths: ["src/css"]
@@ -17,26 +18,38 @@ module.exports = function(grunt) {
   
   grunt.registerTask("less", function() {
     
-    var c = this.async();
+    var done = this.async();
 
-    var paths = grunt.file.expandMapping(files, "./build", {
+    var seeds = grunt.file.expandMapping(files, "./build", {
       ext: ".css",
       cwd: "src/css"
     });
+    seeds.forEach(function(s) { s.cwd = "src/css"});
+    
+    var components = grunt.file.expandMapping("js/components/**/*.less", "temp", {
+      ext: ".less",
+      cwd: "src"
+    });
+    components.forEach(function(c) {
+      c.cwd = path.dirname(c.src[0]);
+    });
+    
+    var mappings = seeds.concat(components);
 
-    async.each(paths, function(path, done) {
+    async.each(mappings, function(mapping, c) {
 
-      var filename = path.src.pop();
+      var filename = mapping.src.pop();
 
       var seed = grunt.file.read(filename);
       
-      var parser = new less.Parser(options);
-      parser.parse(seed, function(err, tree) {
-        var css = tree.toCSS();
-        grunt.file.write(path.dest, css);
-        done();
+      less.render(seed, { paths: [mapping.cwd] }).then(function(result) {
+        grunt.file.write(mapping.dest, result.css);
+        c();
+      }, function(err) {
+        console.error(mapping.dest, err.message);
+        c(err);
       });
-    }, c);
+    }, done);
     
     
   });
