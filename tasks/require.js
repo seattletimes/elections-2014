@@ -11,10 +11,6 @@ var project = require("../project.json");
 module.exports = function(grunt) {
 
   grunt.registerTask("amd", "Compile AMD modules to build/main.js", function() {
-    
-    //less must be performed first, since optimization is sync-only
-    grunt.task.requires("less");
-    
     var c = this.async();
 
     var config = {
